@@ -37,7 +37,7 @@ CREATE TABLE IF NOT EXISTS `caja_chica` (
 CREATE TABLE IF NOT EXISTS `cargo` (
   `id_cargo` int NOT NULL AUTO_INCREMENT,
   `nombre_cargo` varchar(255) NOT NULL,
-  `estado_cargo` varchar(11) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `estado_cargo` varchar(11) NOT NULL,
   PRIMARY KEY (`id_cargo`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
