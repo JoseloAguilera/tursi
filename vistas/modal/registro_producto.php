@@ -135,10 +135,10 @@ if (isset($conexion)) {
 										</div>
 									</div>
 									<div class="col-md-6">
-										<div class="form-group">
+										<!--div class="form-group">
 											<label for="utilidad" class="control-label">Utilidad %:</label>
 											<input type="text" class="form-control" id="utilidad" name="utilidad" pattern="\d{1,4}"  maxlength="100" onkeyup="precio_venta();" >
-										</div>
+										</div-->
 									</div>
 								</div>
 

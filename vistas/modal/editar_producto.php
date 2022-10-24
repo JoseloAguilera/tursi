@@ -135,10 +135,10 @@ if (isset($conexion)) {
 										</div>
 									</div>
 									<div class="col-md-6">
-										<div class="form-group">
+										<!--div class="form-group">
 											<label for="mod_utilidad" class="control-label">Utilidad %:</label>
 											<input type="text" class="form-control" id="mod_utilidad" name="mod_utilidad" pattern="\d{1,4}"  maxlength="4" onkeyup="precio_venta_edit();" >
-										</div>
+										</div-->
 									</div>
 								</div>
 
@@ -151,7 +151,7 @@ if (isset($conexion)) {
 									</div>
 									<div class="col-md-6">
 										<div class="form-group">
-											<label for="mod_preciom" class="control-label">Precio Mayoreo:</label>
+											<label for="mod_preciom" class="control-label">Precio Alquiler:</label>
 											<input type="text" class="form-control" id="mod_preciom" name="mod_preciom" autocomplete="off" pattern="^[0-9]{1,100}?$" title="Ingresa sólo números enteros" maxlength="100">
 										</div>
 									</div>

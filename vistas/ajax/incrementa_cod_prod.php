@@ -12,13 +12,13 @@ if ($count != 0) {
 
     $data_id = mysqli_fetch_assoc($query_id);
     //$codigo  = $data_id['codigo'] + 1;
-    $codigo = 000;
+    $codigo = "";
 } else {
-    $codigo = 1;
+    $codigo = "";
 }
 
-$buat_id = str_pad($codigo, 5, STR_PAD_LEFT);
-$codigo  = "$buat_id";
+//$buat_id = str_pad($codigo, 5, STR_PAD_LEFT);
+//$codigo  = "$buat_id";
 
 echo '<input type="text" class="form-control" autocomplete="off" id="codigo" value="' . $codigo . '" name="codigo" >';
 ?>

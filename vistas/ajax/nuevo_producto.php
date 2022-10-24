@@ -49,7 +49,7 @@ if (empty($_POST['codigo'])) {
     $inv         = intval($_POST['inv']);
     //$imp              = intval($_POST['id_imp']);
     $costo            = floatval($_POST['costo']);
-    $utilidad         = floatval($_POST['utilidad']);
+    $utilidad         = 0;//floatval($_POST['utilidad']);
     $precio_venta     = floatval($_POST['precio']);
     $precio_mayoreo   = floatval($_POST['preciom']);
     $precio_especial  = 0;//floatval($_POST['precioe']);

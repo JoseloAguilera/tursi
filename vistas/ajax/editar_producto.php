@@ -51,7 +51,7 @@ if (empty($_POST['mod_id'])) {
     $estado   = intval($_POST['mod_estado']);
     //$imp             = intval($_POST['id_imp2']);
     $costo           = floatval($_POST['mod_costo']);
-    $utilidad        = floatval($_POST['mod_utilidad']);
+    $utilidad        = 0;//floatval($_POST['mod_utilidad']);
     $precio_venta    = floatval($_POST['mod_precio']);
     $precio_mayoreo  = floatval($_POST['mod_preciom']);
     $precio_especial = 0; //floatval($_POST['mod_precioe']);
