@@ -70,7 +70,7 @@ while ($row = mysqli_fetch_array($query)) {
                          <td><?php echo $nombre_cliente; ?></td>
                          <td><?php echo $nombre_vendedor; ?></td>
                          <td class="text-center">
-                         <a class="btn btn-warning" href="bitacora_cotizacion_versiones.php?id_presupuesto=<?php echo $id_presupuesto; ?>"><i class='fa fa-edit'></i> Versiones</a>
+                         <a class="btn btn-warning" href="bitacora_cotizacion_version.php?id_presupuesto=<?php echo $id_presupuesto; ?>&num_presu=<?php echo $numero_presupuesto; ?>"><i class='fa fa-edit'></i> Versiones</a>
                    </td>
 
                </tr>

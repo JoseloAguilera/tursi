@@ -3,10 +3,10 @@
 		});
 
 		function load(page) {
-		    var q = $("#q").val();
+		    //var q = $("#q").val();
 		    $("#loader").fadeIn('slow');
 		    $.ajax({
-		        url: '../ajax/buscar_cotizacion.php?action=ajax&page=' + page + '&q=' + q,
+		        url: '../ajax/buscar_cotizacion_versiones.php?action=ajax&page=' + page /*+ '&q=' + q*/,
 		        beforeSend: function(objeto) {
 		            $('#loader').html('<img src="../../img/ajax-loader.gif"> Cargando...');
 		        },
@@ -19,7 +19,7 @@
 		        }
 		    })
 		}
-		$('#dataDelete').on('show.bs.modal', function(event) {
+	/*	$('#dataDelete').on('show.bs.modal', function(event) {
 		    var button = $(event.relatedTarget) // Botón que activó el modal
 		    var id = button.data('id') // Extraer la información de atributos de datos
 		    var modal = $(this)
@@ -48,8 +48,8 @@
 		    });
 		    event.preventDefault();
 		});
-
-		function imprimir_factura(id_factura) {
+*/
+/*		function imprimir_factura(id_factura) {
 		    VentanaCentrada('../pdf/documentos/ver_cotizacion.php?id_factura=' + id_factura, 'Factura', '', '724', '568', 'true');
 		}
 		// print order function
@@ -99,4 +99,4 @@
 		            } // /success function
 		        }); // /ajax function to fetch the printable order
 		    } // /if orderId
-		} // /print order function
+		} // /print order function*/

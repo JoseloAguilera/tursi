@@ -16,6 +16,14 @@ permisos($modulo, $cadena_permisos);
 //Finaliza Control de Permisos
 $title  = "Ventas";
 $ventas = 1;
+if (isset($_GET['id_presupuesto'])) {
+	$id_presupuesto = mysqli_real_escape_string($conexion, (strip_tags($_REQUEST['id_presupuesto'], ENT_QUOTES)));
+   $_SESSION['id_presupuesto'] = $id_presupuesto;
+   $numero_presupuesto = $_GET['num_presu'];
+} else {
+    header("location: ../html/bitacora_cotizacion.php");
+    exit;
+}
 ?>
 
 <?php require 'includes/header_start.php';?>
@@ -40,7 +48,7 @@ $ventas = 1;
 					<div class="portlet">
 						<div class="portlet-heading bg-primary">
 							<h3 class="portlet-title">
-								Listado de Presupuestos
+								Versiones del Presupuesto <?php echo $numero_presupuesto; ?>
 							</h3>
 							<div class="portlet-widgets">
 								<a href="javascript:;" data-toggle="reload"><i class="ion-refresh"></i></a>
@@ -57,23 +65,21 @@ $ventas = 1;
 include "../modal/eliminar_factura.php";
     ?>
 
-								<form class="form-horizontal" role="form" id="datos_cotizacion">
+								
 									<div class="form-group row">
 										<div class="col-md-5">
-											<div class="input-group">
-												<input type="text" class="form-control" id="q" placeholder="Nombre del cliente o # factura" onkeyup='load(1);'>
-												<span class="input-group-btn">
-													<button type="button" class="btn btn-info waves-effect waves-light" onclick='load(1);'>
-														<span class="fa fa-search" ></span></button>
-													</span>
-												</div>
+										<div class="btn-group pull-center">
+																	<?php if ($permisos_ver == 1) {?>
+																	<button type="button" class="btn btn-success waves-effect waves-light" data-toggle="modal" data-target="#add-stock"><i class="fa fa-plus"></i> Nueva Version</button>
+																	<?php }?>
+																</div>
 											</div>
 											<div class="col-md-4">
 												<span id="loader"></span>
 											</div>
 
-										</div>
-									</form>
+									</div>
+							
 									<div class="datos_ajax_delete"></div><!-- Datos ajax Final -->
 									<div class='outer_div'></div><!-- Carga los datos ajax -->
 
