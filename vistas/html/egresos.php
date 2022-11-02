@@ -11,12 +11,11 @@ require_once "../php_conexion.php"; //Contiene funcion que conecta a la base de 
 include "../permisos.php";
 $user_id = $_SESSION['id_users'];
 get_cadena($user_id);
-$modulo = "Proveedores";
+$modulo = "Gastos";
 permisos($modulo, $cadena_permisos);
 //Finaliza Control de Permisos
-$title     = "Proveedores";
+$title     = "Gastos";
 $pacientes = 1;
-
 ?>
 
 <?php require 'includes/header_start.php';?>
@@ -26,9 +25,7 @@ $pacientes = 1;
 <!-- Begin page -->
 <div id="wrapper">
 
-	<?php require 'includes/menu.php';
-	
-	?>
+	<?php require 'includes/menu.php';?>
 
 	<!-- ============================================================== -->
 	<!-- Start right Content here -->
@@ -43,7 +40,7 @@ $pacientes = 1;
 					<div class="portlet">
 						<div class="portlet-heading bg-primary">
 							<h3 class="portlet-title">
-								proveedores
+								Gastos
 							</h3>
 							<div class="portlet-widgets">
 								<a href="javascript:;" data-toggle="reload"><i class="ion-refresh"></i></a>
@@ -59,9 +56,9 @@ $pacientes = 1;
 
 <?php
 if ($permisos_editar == 1) {
-        include '../modal/registro_proveedor.php';
-        include "../modal/editar_proveedor.php";
-        include "../modal/eliminar_proveedor.php";
+        include '../modal/registro_egresos.php';
+        // include "../modal/editar_proveedor.php";
+        include "../modal/anular_egreso.php";
     }
     ?>
 
@@ -69,7 +66,7 @@ if ($permisos_editar == 1) {
 									<div class="form-group row">
 										<div class="col-md-6">
 											<div class="input-group">
-												<input type="text" class="form-control" id="q" placeholder="Buscar por Nombre o RUC" onkeyup='load(1);' autocomplete="off">
+												<input type="text" class="form-control" id="q" placeholder="Buscar por Concepto o Nro Comprobante" onkeyup='load(1);' autocomplete="off">
 												<span class="input-group-btn">
 													<button type="button" class="btn btn-outline-info btn-rounded waves-effect waves-light" onclick='load(1);'>
 														<span class="fa fa-search" ></span></button>
@@ -81,14 +78,14 @@ if ($permisos_editar == 1) {
 											</div>
 											<div class="col-md-2">
 												<div class="btn-group pull-right">
-												<button type="button" class="btn btn-success btn-rounded waves-effect waves-light" data-toggle="modal" data-target="#nuevoProveedor"><i class="fa fa-user-plus"></i> Agregar</button>
+												<button type="button" class="btn btn-success btn-rounded waves-effect waves-light" data-toggle="modal" data-target="#nuevoEgreso"><i class="fa fa-user-plus"></i> Agregar</button>
 												</div>
 
 											</div>
-											<div class="col-md-2">
+											<div class="col-md-2" style=" display: none">
 													<div class="btn-group pull-right">
 														<?php if ($permisos_editar == 1) {?>
-														<div class="btn-group dropup">
+														<div class="btn-group dropup" >
 															<button aria-expanded="false" class="btn btn-outline-default btn-rounded waves-effect waves-light" data-toggle="dropdown" type="button">
 																<i class='fa fa-file-text'></i> Reporte
 																<span class="caret">
@@ -105,7 +102,7 @@ if ($permisos_editar == 1) {
 														</div>
 														<?php }?>
 													</div>
-												</div>
+											</div>
 
 										</div>
 									</form>
@@ -153,7 +150,7 @@ if ($permisos_editar == 1) {
 	<!-- Todo el codigo js aqui -->
 	<!-- ============================================================== -->
 	<script type="text/javascript" src="../../js/VentanaCentrada.js"></script>
-	<script type="text/javascript" src="../../js/proveedores.js"></script>
+	<script type="text/javascript" src="../../js/egresos.js"></script>
 	<script>
 	function obtener_historial(id_paciente) {
 		    $(".outer_div4").load("../modal/historial.php?id_paciente=" + id_paciente);

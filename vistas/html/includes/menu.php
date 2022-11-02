@@ -147,6 +147,8 @@
 												<ul class="list-unstyled">
 													<li><a href="../html/cxc.php">Abono Cliente</a></li>
 													<li><a href="../html/cxp.php">Abono Proveedor</a></li>
+													<li><a href="../html/egresos.php">Gastos</a></li>
+
 												</ul>
 											</li>
 
