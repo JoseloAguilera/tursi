@@ -17,8 +17,24 @@
 		                html: true
 		            });
 		        }
-		    })
+		    });
 		}
+
+	/* 	function nuevaVersion(id_presupuesto) {
+		    $.ajax({
+				type: "POST",
+				url: "../ajax/nueva_version.php",
+				data: "id=" + id_presupuesto,
+				beforeSend: function(objeto) {
+					//$('#loader').html('<img src="../../img/ajax-loader.gif"> Cargando...');
+				},
+				success: function(datos) {
+					$("#resultados").html(datos);
+				}
+			});
+		} */
+
+	
 	/*	$('#dataDelete').on('show.bs.modal', function(event) {
 		    var button = $(event.relatedTarget) // Botón que activó el modal
 		    var id = button.data('id') // Extraer la información de atributos de datos

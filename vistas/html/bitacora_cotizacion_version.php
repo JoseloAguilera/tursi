@@ -70,7 +70,7 @@ include "../modal/eliminar_factura.php";
 										<div class="col-md-5">
 										<div class="btn-group pull-center">
 																	<?php if ($permisos_ver == 1) {?>
-																	<button type="button" class="btn btn-success waves-effect waves-light" data-toggle="modal" data-target="#add-stock"><i class="fa fa-plus"></i> Nueva Version</button>
+																	<button type="button" class="btn btn-success waves-effect waves-light" onclick="nuevaVersion(<?php echo $id_presupuesto; ?>)"><i class="fa fa-plus"></i> Nueva Version</button>
 																	<?php }?>
 																</div>
 											</div>
@@ -82,6 +82,7 @@ include "../modal/eliminar_factura.php";
 							
 									<div class="datos_ajax_delete"></div><!-- Datos ajax Final -->
 									<div class='outer_div'></div><!-- Carga los datos ajax -->
+									<div id="resultados"></div><!-- Carga los datos ajax -->
 
 
 
@@ -125,6 +126,22 @@ include "../modal/eliminar_factura.php";
 	<!-- ============================================================== -->
 	<script type="text/javascript" src="../../js/VentanaCentrada.js"></script>
 	<script type="text/javascript" src="../../js/bitacora_cotizacion_versiones.js"></script>
+	<script>
+		function nuevaVersion(id_presupuesto) {
+		    $.ajax({
+				type: "POST",
+				url: "../ajax/nueva_version.php",
+				data: "id=" + id_presupuesto,
+				beforeSend: function(objeto) {
+					//$('#loader').html('<img src="../../img/ajax-loader.gif"> Cargando...');
+				},
+				success: function(datos) {
+					$("#resultados").html(datos);
+					load(1);
+				}
+			});
+		}
+	</script>
 
 	<?php require 'includes/footer_end.php'
 ?>

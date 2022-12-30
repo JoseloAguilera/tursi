@@ -58,7 +58,6 @@ $nombre_usuario = get_row('users', 'usuario_users', 'id_users', $user_id);
 	include "../modal/buscar_productos_ventas.php";
 	include "../modal/buscar_clientes_ventas.php";
     include "../modal/registro_cliente.php";
-    include "../modal/registro_producto.php";
     ?>
 									<div class="row">
 										<div class="col-lg-8">
@@ -69,12 +68,16 @@ $nombre_usuario = get_row('users', 'usuario_users', 'id_users', $user_id);
 													<form class="form-horizontal" role="form" id="barcode_form">
 														<div class="form-group row">
 															<label for="barcode_qty" class="col-md-1 control-label">Cant:</label>
-															<div class="col-md-2">
+															<div class="col-md-1">
 																<input type="text" class="form-control" id="barcode_qty" value="1" autocomplete="off">
+															</div>
+															<label for="jornada" class="col-md-1 control-label">Jornada:</label>
+															<div class="col-md-1">
+																<input type="text" class="form-control" id="jornada" value="1" autocomplete="off">
 															</div>
 
 															<label for="condiciones" class="control-label">Codigo:</label>
-															<div class="col-md-5" align="left">
+															<div class="col-md-4" align="left">
 																<div class="input-group">
 																	<input type="text" class="form-control" id="barcode" autocomplete="off"  tabindex="1" autofocus="true" >
 																	<span class="input-group-btn">
@@ -101,7 +104,15 @@ $nombre_usuario = get_row('users', 'usuario_users', 'id_users', $user_id);
 											<div class="card-box">
 												<div class="widget-chart">
 													<form role="form" id="datos_factura">
-														<div class="form-group row">
+														<div class="row">
+																<div class="col-md-6">
+																	<div class="form-group">
+																		<label for="reserva">Fecha Reserva</label>
+																		<input type="date" class="form-control" autocomplete="off" id="reserva" name="fecha_reserva">
+																	</div>
+																</div>
+														</div>
+														<div class="form-group row">	
 															<label class="col-2 col-form-label"></label>
 															<div class="col-md-12">
 																	<div class="input-group">
@@ -119,8 +130,8 @@ $nombre_usuario = get_row('users', 'usuario_users', 'id_users', $user_id);
 														<div class="row">
 															<div class="col-md-12">
 																<div class="form-group">
-																	<label for="email">Email</label>
-																	<input type="text" class="form-control" autocomplete="off" id="em" disabled="true">
+																	<label for="tel1">Telefono</label>
+																	<input type="text" class="form-control" autocomplete="off" id="tel1" disabled="true">
 																</div>
 															</div>
 														</div>
@@ -128,7 +139,7 @@ $nombre_usuario = get_row('users', 'usuario_users', 'id_users', $user_id);
 															<div class="col-md-6">
 																<div class="form-group">
 																	<label for="fiscal">RUC | Cedula</label>
-																	<input type="text" class="form-control" autocomplete="off" id="tel1" disabled="true">
+																	<input type="text" class="form-control" autocomplete="off" id="fiscal" disabled="true">
 																</div>
 															</div>
 															<div class="col-md-6">
@@ -163,6 +174,37 @@ $nombre_usuario = get_row('users', 'usuario_users', 'id_users', $user_id);
 																</div>
 															</div>
 														</div>
+														<div class="row">
+															<div class="col-md-12">
+																<div class="form-check">
+																	<input class="form-check-input" type="checkbox" value="En caso de modificar la/s fecha/s estarán sujetas según disponibilidad de TURSI PRODUCCIONES." id="pie1">
+																	<label class="form-check-label" for="pie1">
+																		En caso de modificar la/s fecha/s estarán sujetas según <br> disponibilidad de TURSI PRODUCCIONES.
+																	</label>
+																</div>
+																<div class="form-check">
+																	<input class="form-check-input" type="checkbox" value="Las horas extras inician a partir de contados 16 (dieciséis) minutos de retraso desde la hora de devolución pactada, y así sucesivamente." id="pie2">
+																	<label class="form-check-label" for="pie2">
+																	Las horas extras inician a partir de contados 16 (dieciséis) minutos de retraso desde la hora de devolución pactada, y así sucesivamente.
+																	</label>
+																</div>
+																<div class="form-check">
+																	<input class="form-check-input" type="checkbox" value="LOS EQUIPOS NO CUENTAN CON SEGURO Y EL CLIENTE SE HACE RESPONSABLE POR DAÑOS Y/O EXTRAVIOS." id="pie3">
+																	<label class="form-check-label" for="pie3">
+																	LOS EQUIPOS NO CUENTAN CON SEGURO Y EL CLIENTE SE HACE RESPONSABLE POR DAÑOS Y/O EXTRAVIOS.
+																	</label>
+																</div>
+															</div>
+														</div>
+														<div class="row">
+															<div class="col-md-12">
+																<div class="form-group">
+																	<label for="">Observaciones</label>
+																	<input type="textarea">	
+																</div>
+															</div>
+														</div>
+
 
 														<div class="col-md-12" align="center">
 															<button type="submit" id="guardar_factura" class="btn btn-danger btn-block btn-lg waves-effect waves-light" aria-haspopup="true" aria-expanded="false"><span class="fa fa-save"></span> Guardar</button>
@@ -231,10 +273,10 @@ function agregar_cliente(id,nombre,ruc, correo) {
 	$('#id_cliente').val(id_cliente);
 	$("#nombre_cliente").val(nombre);
 	$('#tel1').val(ruc);
-	$('#em').val(correo);
+	$('#fiscal').val(ruc);
 	$('#buscar_cliente').modal('hide');
 	$.Notification.notify('custom','bottom right','EXITO!', 'CLIENTE AGREGADO CORRECTAMENTE')
- }
+} 
 
 
 	$(function() {
@@ -245,8 +287,8 @@ function agregar_cliente(id,nombre,ruc, correo) {
 				event.preventDefault();
 				$('#id_cliente').val(ui.item.id_cliente);
 				$('#nombre_cliente').val(ui.item.nombre_cliente);
-				$('#tel1').val(ui.item.fiscal_cliente);
-				$('#em').val(ui.item.email_cliente);
+				$('#fiscal').val(ui.item.fiscal_cliente);
+				$('#tel1').val(ui.item.telefono_cliente);
 				$.Notification.notify('success','bottom right','EXITO!', 'CLIENTE AGREGADO CORRECTAMENTE')
 			}
 		});
@@ -256,13 +298,13 @@ function agregar_cliente(id,nombre,ruc, correo) {
 		if (event.keyCode== $.ui.keyCode.LEFT || event.keyCode== $.ui.keyCode.RIGHT || event.keyCode== $.ui.keyCode.UP || event.keyCode== $.ui.keyCode.DOWN || event.keyCode== $.ui.keyCode.DELETE || event.keyCode== $.ui.keyCode.BACKSPACE )
 		{
 			$("#id_cliente" ).val("");
-			$("#tel1" ).val("");
+			$("#fiscal" ).val("");
 			$("#em" ).val("");
 		}
 		if (event.keyCode==$.ui.keyCode.DELETE){
 			$("#nombre_cliente" ).val("");
 			$("#id_cliente" ).val("");
-			$("#tel1" ).val("");
+			$("#fiscal" ).val("");
 			$("#em" ).val("");
 		}
 	});

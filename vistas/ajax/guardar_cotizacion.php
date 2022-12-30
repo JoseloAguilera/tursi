@@ -31,20 +31,26 @@ if (empty($_POST['id_cliente'])) {
     $condiciones    = mysqli_real_escape_string($conexion, (strip_tags($_REQUEST['condiciones'], ENT_QUOTES)));
     $numero_factura = mysqli_real_escape_string($conexion, (strip_tags($_REQUEST["factura"], ENT_QUOTES)));
     $validez        = floatval($_POST['validez']);
-    $date_added     = date("Y-m-d H:i:s");
+    $fecha_version  = date("Y-m-d");
+    if($_POST['fecha_reserva'] == ""){
+        $fecha_reserva = null;
+    }else{
+        $fecha_reserva = $_POST['fecha_reserva'];
+    }
     //Operacion de Creditos
     if ($condiciones == 4) {
         $estado = 2;
     } else {
         $estado = 1;
     }
-//Seleccionamos el ultimo compo numero_fatura y aumentamos una
-    $sql        = mysqli_query($conexion, "select LAST_INSERT_ID(id_factura) as last from facturas_cot order by id_factura desc limit 0,1 ");
+
+    $insert_cotizacion = mysqli_query($conexion, "INSERT INTO cotizaciones VALUES (NULL,'$numero_factura','$id_cliente','$id_vendedor')");
+    $sql        = mysqli_query($conexion, "select LAST_INSERT_ID(id_presupuesto) as last from cotizaciones order by last desc limit 0,1 ");
     $rw         = mysqli_fetch_array($sql);
-    $id_factura = $rw['last'] + 1;
+    $id_presupuesto = $rw['last'];
 // finde la ultima fatura
     //Control de la  numero_fatura y aumentamos una
-    $query_id = mysqli_query($conexion, "SELECT RIGHT(numero_factura,6) as factura FROM facturas_cot ORDER BY factura DESC LIMIT 1")
+    /*$query_id = mysqli_query($conexion, "SELECT RIGHT(numero_presupuesto,6) as factura FROM cotizaciones ORDER BY factura DESC LIMIT 1")
     or die('error ' . mysqli_error($conexion));
     $count = mysqli_num_rows($query_id);
 
@@ -54,10 +60,15 @@ if (empty($_POST['id_cliente'])) {
         $factura = $data_id['factura'] + 1;
     } else {
         $factura = 1;
-    }
+    } */
 
-    $buat_id = str_pad($factura, 6, "0", STR_PAD_LEFT);
-    $factura = "COT-$buat_id";
+  /*  $buat_id = str_pad($factura, 6, "0", STR_PAD_LEFT);*/
+  //Seleccionamos el ultimo compo numero_fatura y aumentamos una
+   // $sql        = mysqli_query($conexion, "select LAST_INSERT_ID(id_version) as last from facturas_cot order by id_version desc limit 0,1 ");
+    $sql        = mysqli_query($conexion, "select LAST_INSERT_ID(id_version) as last from facturas_cot order by last desc limit 0,1 ");
+    $rw         = mysqli_fetch_array($sql);
+    $id_version = $rw['last']+1;
+    //$factura = "COT-$buat_id";
 // fin de numero de fatura
     // consulta principal
     $nums          = 1;
@@ -124,14 +135,15 @@ if (empty($_POST['id_cliente'])) {
         }
 
         //Insert en la tabla detalle_factura
-        $insert_detail = mysqli_query($conexion, "INSERT INTO detalle_fact_cot VALUES (NULL,'$id_factura','$factura','$id_producto','$cantidad','$desc_tmp','$precio_venta')");
+        $insert_detail = mysqli_query($conexion, "INSERT INTO detalle_fact_cot VALUES (NULL,'$id_version','$id_producto','$cantidad','$desc_tmp','$precio_venta')");
     }
     // Fin de la consulta Principal
     $subtotal      = number_format($sumador_total, 0, '', '.');
     //$total_iva     = ($subtotal * $impuesto) / 100;
     //$total_iva     = number_format($total_iva, 2, '.', '') - number_format($t_iva, 2, '.', '');
     $total_factura = $sumador_total;
-    $insert        = mysqli_query($conexion, "INSERT INTO facturas_cot VALUES (NULL,'$factura','$date_added','$id_cliente','$id_vendedor','$condiciones','$total_factura','$estado','$users','$validez','1')");
+    $insert_version        = mysqli_query($conexion, "INSERT INTO facturas_cot VALUES (NULL,'$id_presupuesto','$fecha_version','$fecha_reserva','$condiciones','$total_factura','1','$validez', '$users', '0','$id_cliente')");
+    
     $delete        = mysqli_query($conexion, "DELETE FROM tmp_cotizacion WHERE session_id='" . $session_id . "'");
     // SI TODO ESTA CORRECTO
 
@@ -187,13 +199,13 @@ foreach ($messages as $message) {
                 <strong><h3>NO. COTIZACION</h3></strong>
                 <div class="alert alert-info" align="center">
                     <strong><h1>
-                        <?php echo $factura; ?>
+                        <?php echo $numero_factura; ?>
                     </h1></strong>
                 </div>
 
             </div>
             <div class="modal-footer">
-                <button type="button" id="imprimir2" class="btn btn-success btn-block btn-lg waves-effect waves-light" onclick="printFactura('<?php echo $factura; ?>');" accesskey="p"><span class="fa fa-print"></span> IMPRIMIR</button>
+                <button type="button" id="imprimir2" class="btn btn-success btn-block btn-lg waves-effect waves-light" onclick="printFactura('<?php echo $numero_factura; ?>');" accesskey="p"><span class="fa fa-print"></span> IMPRIMIR</button>
             </div>
         </div>
     </div>

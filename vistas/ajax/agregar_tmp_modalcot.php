@@ -9,7 +9,9 @@ require_once "../php_conexion.php";
 require_once "../funciones.php";
 if (isset($_POST['id'])) {$id = $_POST['id'];}
 if (isset($_POST['cantidad'])) {$cantidad = $_POST['cantidad'];}
+if (isset($_POST['jornada'])) {$jornada = $_POST['jornada'];}
 if (isset($_POST['precio_venta'])) {$precio_venta = $_POST['precio_venta'];}
+
 
 if (!empty($id) and !empty($cantidad) and !empty($precio_venta)) {
     // consulta para comparar el stock con la cantidad resibida
@@ -22,12 +24,13 @@ if (!empty($id) and !empty($cantidad) and !empty($precio_venta)) {
     $comprobar = mysqli_query($conexion, "select * from tmp_cotizacion, productos where productos.id_producto = tmp_cotizacion.id_producto and tmp_cotizacion.id_producto='" . $id . "' and tmp_cotizacion.session_id='" . $session_id . "'");
     if ($row = mysqli_fetch_array($comprobar)) {
         $cant = $row['cantidad_tmp'] + $cantidad;
+        $jor = $row['jornada_tmp'] + $jornada;
 // condicion si el stock e menor que la cantidad requerida
-        $sql          = "UPDATE tmp_cotizacion SET cantidad_tmp='" . $cant . "', precio_tmp='" . $precio_venta . "' WHERE id_producto='" . $id . "' and session_id='" . $session_id . "'";
+        $sql          = "UPDATE tmp_cotizacion SET cantidad_tmp='" . $cant . "', jornada_tmp='" . $jor . "',precio_tmp='" . $precio_venta . "' WHERE id_producto='" . $id . "' and session_id='" . $session_id . "'";
         $query_update = mysqli_query($conexion, $sql);
         echo "<script> $.Notification.notify('success','bottom center','NOTIFICACIÓN', 'PRODUCTO AGREGADO A LA FACTURA CORRECTAMENTE')</script>";
     } else {
-        $insert_tmp = mysqli_query($conexion, "INSERT INTO tmp_cotizacion (id_producto,cantidad_tmp,precio_tmp,desc_tmp,session_id) VALUES ('$id','$cantidad','$precio_venta','0','$session_id')");
+        $insert_tmp = mysqli_query($conexion, "INSERT INTO tmp_cotizacion (id_producto,cantidad_tmp,jornada_tmp,precio_tmp,desc_tmp,session_id) VALUES ('$id','$cantidad','$jornada','$precio_venta','0','$session_id')");
 
         echo "<script> $.Notification.notify('success','bottom center','NOTIFICACIÓN', 'PRODUCTO AGREGADO A LA FACTURA CORRECTAMENTE')</script>";
     }
@@ -46,6 +49,7 @@ $simbolo_moneda = get_row('perfil', 'moneda', 'id_perfil', 1);
             <tr>
                 <th class='text-center'>COD</th>
                 <th class='text-center'>CANT.</th>
+                <th class='text-center'>JOR.</th>
                 <th class='text-center'>DESCRIP.</th>
                 <th class='text-center'>PRECIO <?php echo $simbolo_moneda; ?></th>
                 <th class='text-center'>DESC %</th>
@@ -74,13 +78,14 @@ while ($row = mysqli_fetch_array($sql)) {
     $codigo_producto = $row['codigo_producto'];
     $id_producto     = $row['id_producto'];
     $cantidad        = $row['cantidad_tmp'];
+    $jornada         = $row['jornada_tmp'];
     $desc_tmp        = $row['desc_tmp'];
     $nombre_producto = $row['nombre_producto'];
 
     $precio_venta   = $row['precio_tmp'];
     $precio_venta_f = number_format($precio_venta, 0, '', ''); //Formateo variables
     //$precio_venta_r = str_replace(",", "", $precio_venta_f); //Reemplazo las comas
-    $precio_total   = $precio_venta * $cantidad;
+    $precio_total   = $precio_venta * $cantidad * $jornada;
     $final_items    = rebajas($precio_total, $desc_tmp); //Aplicando el descuento
     /*--------------------------------------------------------------------------------*/
     $precio_total_f = number_format($final_items, 0, '', '.'); //Precio total formateado
@@ -90,22 +95,26 @@ while ($row = mysqli_fetch_array($sql)) {
     $subtotal    = $sumador_total;
     if ($row['iva_producto'] == 10) {
         //$total_iva = iva($precio_venta);
-        $sub_10 += $precio_venta;
-        $total_iva10 = $precio_venta/11;
+        $sub_10 += $precio_total;
+        $total_iva10 = $precio_total/11;
         $total_impuesto10 += (rebajas($total_iva10, $desc_tmp) * $cantidad);
     } elseif ($row['iva_producto'] == 5) {
-        $sub_5 += $precio_venta;
-        $total_iva5 = $precio_venta/21;
+        $sub_5 += $precio_total;
+        $total_iva5 = $precio_total/21;
         $total_impuesto5 += (rebajas($total_iva5, $desc_tmp) * $cantidad);
     }else {
-        $sub_0 += $precio_venta;
-        $total_iva0 = $precio_venta;
+        $sub_0 += $precio_total;
+        $total_iva0 = $precio_total;
         $total_impuesto0 += (rebajas($total_iva0, $desc_tmp) * $cantidad);
     }
     ?>
     <tr>
         <td class='text-center'><?php echo $codigo_producto; ?></td>
         <td class='text-center'><?php echo $cantidad; ?></td>
+      <!--   <td class='text-center'><?php //echo $jornada; ?></td> -->
+        <td align="right" width="7%">
+                <input type="text" class="form-control txt_jor" style="text-align:center" value="<?php echo $jornada; ?>" id="<?php echo $id_tmp; ?>">
+        </td>
         <td><?php echo $nombre_producto; ?></td>
         <td class='text-center'>
             <div class="input-group">
@@ -223,6 +232,54 @@ permisos($modulo, $cadena_permisos);
         success: function(datos) {
            $("#resultados").load("../ajax/agregar_tmp_cot.php");
            $.Notification.notify('success','bottom center','EXITO!', 'DESCUENTO ACTUALIZADO CORRECTAMENTE')
+       }
+   });
+        // }
+    });
+     $(".employee_id").on("change", function(event) {
+         id_tmp = $(this).attr("id");
+        precio = $(this).val();
+        $.ajax({
+            type: "POST",
+            url: "../ajax/editar_precio_cot.php",
+            data: "id_tmp=" + id_tmp + "&precio=" + precio,
+            success: function(datos) {
+               $("#resultados").load("../ajax/agregar_tmp_cot.php");
+               $.Notification.notify('success','bottom center','EXITO!', 'PRECIO ACTUALIZADO CORRECTAMENTE')
+           }
+       });
+    });
+
+    });
+
+    // INICIA VERIFICACION DE JORNADAS
+    $(document).ready(function () {
+        permiso = document.getElementById('permiso').value;
+        $('.txt_jor').off('blur');
+        $('.txt_jor').on('blur',function(event){
+            var keycode = (event.keyCode ? event.keyCode : event.which);
+        // if(keycode == '13'){
+            id_tmp = $(this).attr("id");
+            jorn = $(this).val();
+             //Inicia validacion
+             
+             //console.log(permiso);
+             if(permiso == "1"){
+                if (isNaN(jorn)) {
+                    $.Notification.notify('error','bottom center','ERROR', 'DIGITAR UN NÚMERO VÁLIDO')
+                    $(this).focus();
+                    return false;
+                }
+             }
+             
+    //Fin validacion
+    $.ajax({
+        type: "POST",
+        url: "../ajax/editar_jornada_cot.php",
+        data: "id_tmp=" + id_tmp + "&jorn=" + jorn,
+        success: function(datos) {
+           $("#resultados").load("../ajax/agregar_tmp_cot.php");
+           $.Notification.notify('success','bottom center','EXITO!', 'JORNADA ACTUALIZADA CORRECTAMENTE')
        }
    });
         // }

@@ -3,7 +3,7 @@ include 'is_logged.php'; //Archivo verifica que el usario que intenta acceder a 
 /* Connect To Database*/
 require_once "../db.php";
 require_once "../php_conexion.php";
-$query_id = mysqli_query($conexion, "SELECT RIGHT(numero_factura,6) as factura FROM facturas_cot
+$query_id = mysqli_query($conexion, "SELECT RIGHT(numero_presupuesto,6) as factura FROM cotizaciones
   ORDER BY factura DESC LIMIT 1")
 or die('error ' . mysqli_error($conexion));
 $count = mysqli_num_rows($query_id);

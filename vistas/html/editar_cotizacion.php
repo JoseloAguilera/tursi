@@ -20,10 +20,10 @@ $title          = "Ventas";
 $Ventas         = 1;
 $nombre_usuario = get_row('users', 'usuario_users', 'id_users', $user_id);
 
-if (isset($_GET['id_factura'])) {
-    $id_factura  = intval($_GET['id_factura']);
-    $campos      = "clientes.id_cliente, clientes.nombre_cliente, clientes.fiscal_cliente, clientes.email_cliente, facturas_cot.id_vendedor, facturas_cot.fecha_factura, facturas_cot.condiciones, facturas_cot.validez, facturas_cot.numero_factura";
-    $sql_factura = mysqli_query($conexion, "select $campos from facturas_cot, clientes where facturas_cot.id_cliente=clientes.id_cliente and id_factura='" . $id_factura . "'");
+if (isset($_GET['id_version'])) {
+    $id_version  = intval($_GET['id_version']);
+    $campos      = "clientes.id_cliente, clientes.nombre_cliente, clientes.fiscal_cliente, clientes.email_cliente, facturas_cot.user, facturas_cot.fecha_version, facturas_cot.condiciones, facturas_cot.validez, facturas_cot.version";
+    $sql_factura = mysqli_query($conexion, "select $campos from facturas_cot, clientes where facturas_cot.id_cliente=clientes.id_cliente and id_version='" . $id_version . "'");
     $count       = mysqli_num_rows($sql_factura);
     if ($count == 1) {
         $rw_factura                 = mysqli_fetch_array($sql_factura);
@@ -36,14 +36,16 @@ if (isset($_GET['id_factura'])) {
         $condiciones                = $rw_factura['condiciones'];
         $validez                    = $rw_factura['validez'];
         $numero_factura             = $rw_factura['numero_factura'];
-        $_SESSION['id_factura']     = $id_factura;
-        $_SESSION['numero_factura'] = $numero_factura;
+        $_SESSION['id_version']     = $id_version;
+        //$_SESSION['numero_factura'] = $numero_factura;
     } else {
-        header("location: facturas.php");
+        //var_dump($_GET['id_version']);
+		//header("location: facturas.php");
         exit;
     }
 } else {
-    header("location: facturas.php");
+	var_dump($_GET['id_version']);
+    //header("location: facturas.php");
     exit;
 }
 //consulta para elegir el comprobante

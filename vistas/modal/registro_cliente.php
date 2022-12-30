@@ -22,8 +22,8 @@ if (isset($conexion)) {
 						<div class="row">
 							<div class="col-md-6">
 								<div class="form-group">
-									<label for="fiscal" class="control-label">RUC | Cedula:</label>
-									<input type="text" class="form-control" id="fiscal" name="fiscal" autocomplete="off">
+									<label for="ruc" class="control-label">RUC | Cedula:</label>
+									<input type="text" class="form-control" id="ruc" name="fiscal" autocomplete="off">
 								</div>
 							</div>
 							<div class="col-md-6">

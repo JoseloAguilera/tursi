@@ -16,7 +16,7 @@ if (isset($_GET['term'])) {
             $row_array['id_cliente']     = $id_cliente;
             $row_array['nombre_cliente'] = $row['nombre_cliente'];
             $row_array['fiscal_cliente'] = $row['fiscal_cliente'];
-            $row_array['email_cliente']  = $row['email_cliente'];
+            $row_array['telefono_cliente']  = $row['telefono_cliente'];
             array_push($return_arr, $row_array);
         }
 

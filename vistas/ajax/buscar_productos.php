@@ -1,10 +1,5 @@
 <?php
 
-/*-------------------------
-Autor: Delmar Lopez
-Web: softwys.com
-Mail: softwysop@gmail.com
----------------------------*/
 include 'is_logged.php'; //Archivo verifica que el usario que intenta acceder a la URL esta logueado
 /* Connect To Database*/
 require_once "../db.php";
@@ -63,7 +58,7 @@ if ($action == 'ajax') {
         <div class="table-responsive">
           <table class="table table-sm table-striped">
             <tr  class="info">
-                <th>ID</th>
+               <!--  <th>ID</th> -->
                 <th></th>
                 <th>Código</th>
                 <th>Producto</th>
@@ -124,7 +119,7 @@ while ($row = mysqli_fetch_array($query)) {
                 <input type="hidden" value="<?php echo number_format($precio_especial, 0, '', ''); ?>" id="precio_especial<?php echo $id_producto; ?>">
                 <input type="hidden" value="<?php echo $id_imp_producto; ?>" id="id_imp_producto<?php echo $id_producto; ?>">
                 <tr>
-                    <td><span class="badge badge-purple"><?php echo $id_producto; ?></span></td>
+                    <!-- <td><span class="badge badge-purple"><?php echo $id_producto; ?></span></td> -->
                     <td class='text-center'>
                         <?php
 if ($image_path == null) {

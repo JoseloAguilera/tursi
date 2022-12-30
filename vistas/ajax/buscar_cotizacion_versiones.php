@@ -1,9 +1,5 @@
 <?php
-/*-------------------------
-Autor: Delmar Lopez
-Web: www.softwys.com
-Mail: softwysop@gmail.com
----------------------------*/
+
 include 'is_logged.php'; //Archivo verifica que el usario que intenta acceder a la URL esta logueado
 /* Connect To Database*/
 require_once "../db.php"; //Contiene las variables de configuracion para conectar a la base de datos
@@ -22,9 +18,9 @@ $action = (isset($_REQUEST['action']) && $_REQUEST['action'] != null) ? $_REQUES
 if ($action == 'ajax') {
     // escaping, additionally removing everything that could be (html/javascript-) code
     //$q      = mysqli_real_escape_string($conexion, (strip_tags($_REQUEST['q'], ENT_QUOTES)));
-    $sTable = "facturas_cot, users";
+    $sTable = "facturas_cot INNER JOIN users ON facturas_cot.user = users.id_users";
     $sWhere = "";
-    $sWhere .= " WHERE id_presupuesto='" .$id_presupuesto. "' and facturas_cot.user=users.id_users";
+    $sWhere .= " WHERE id_presupuesto='" .$id_presupuesto. "'";
     /*if ($_GET['q'] != "") {
         $sWhere .= " and  (clientes.nombre_cliente like '%$q%' or facturas_cot.numero_factura like '%$q%')";
 
@@ -44,7 +40,7 @@ if ($action == 'ajax') {
     $total_pages = ceil($numrows / $per_page);
     $reload      = '../reportes/facturas.php';
     //main query to fetch the data
-    $sql   = "SELECT * FROM  $sTable $sWhere LIMIT $offset,$per_page";
+    $sql   = "SELECT facturas_cot.*, users.nombre_users, users.apellido_users FROM  $sTable $sWhere LIMIT $offset,$per_page";
     $query = mysqli_query($conexion, $sql);
     //loop through fetched data
     if ($numrows > 0) {
@@ -57,6 +53,7 @@ if ($action == 'ajax') {
                 <th>Pago</th>
                 <th>Monto</th>
                 <th>Usuario</th>
+                <th>Reserva</th>
                 <th>Versión</th>
                 <th></th>
 
@@ -66,7 +63,7 @@ while ($row = mysqli_fetch_array($query)) {
             $id_version       = $row['id_version'];
             $id_presupuesto   = $row['id_presupuesto'];
             $fecha            = date("d/m/Y", strtotime($row['fecha_version']));
-            $estado_factura   = $row['estado_factura'];
+            $estado_factura   = $row['condiciones'];
             if ($estado_factura == 1) {
                 $text_estado = "CONTADO";
                 $label_class = 'badge-success';} else {
@@ -75,6 +72,12 @@ while ($row = mysqli_fetch_array($query)) {
             $total_presu    = $row['monto_factura'];
             $simbolo_moneda = get_row('perfil', 'moneda', 'id_perfil', 1);
             $nombre_vendedor  = $row['nombre_users'] . " " . $row['apellido_users'];
+            if($row['fecha_reserva'] != null){
+                $reserva = date("d/m/Y", strtotime($row['fecha_reserva']));
+            }else{
+                $reserva = "A Definir";
+            }
+            
             $version = $row['version'];
             ?>
                         <tr>
@@ -82,6 +85,7 @@ while ($row = mysqli_fetch_array($query)) {
                          <td><span class="badge <?php echo $label_class; ?>"><?php echo $text_estado; ?></span></td>
                          <td class='text-left'><b><?php echo $simbolo_moneda . ' ' . number_format($total_presu, 0,"","."); ?></b></td>
                          <td><?php echo $nombre_vendedor; ?></td>
+                         <td><?php echo $reserva; ?></td>
                          <td><?php echo $version; ?></td>
                          
                          
@@ -90,8 +94,8 @@ while ($row = mysqli_fetch_array($query)) {
                             <button type="button" class="btn btn-warning btn-sm dropdown-toggle waves-effect waves-light" data-toggle="dropdown" aria-expanded="false"> <i class='fa fa-cog'></i> <i class="caret"></i> </button>
                             <div class="dropdown-menu dropdown-menu-right">
                                <?php if ($permisos_editar == 1) {?>
-                               <a class="dropdown-item" href="editar_cotizacion.php?id_factura=<?php //echo $id_factura; ?>"><i class='fa fa-edit'></i> Editar</a>
-                               <a class="dropdown-item" href="#" onclick="imprimir_factura('<?php //echo $id_factura; ?>');"><i class='fa fa-print'></i> Imprimir</a>
+                               <a class="dropdown-item" href="editar_cotizacion.php?id_version=<?php echo $id_version; ?>"><i class='fa fa-edit'></i> Editar</a>
+                               <a class="dropdown-item" href="#" onclick="imprimir_factura('<?php echo $id_version; ?>');"><i class='fa fa-print'></i> Imprimir</a>
                                <?php }
             if ($permisos_eliminar == 1) {?>
                                <!--<a class="dropdown-item" href="#" data-toggle="modal" data-target="#dataDelete" data-id="<?php //echo $row['id_factura']; ?>"><i class='fa fa-trash'></i> Eliminar</a>-->

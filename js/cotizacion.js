@@ -11,7 +11,7 @@ function load(page) {
     var t = $("#t").val();
     $("#loader").fadeIn('slow');
     $.ajax({
-        url: '../ajax/productos_modal_ventas.php?action=ajax&page=' + page + '&q=' + q,
+        url: '../ajax/productos_modal_alquiler.php?action=ajax&page=' + page + '&q=' + q,
         beforeSend: function(objeto) {
             $('#loader').html('<img src="../../img/ajax-loader.gif"> Cargando...');
         },
@@ -35,30 +35,36 @@ function load(page) {
 function agregar(id) {
     var precio_venta = document.getElementById('precio_venta_' + id).value;
     var cantidad = document.getElementById('cantidad_' + id).value;
+    var jornada = document.getElementById('jornada_' + id).value;
     var costo = document.getElementById('precio_costo_' + id).value;
     precio_costo = parseInt(costo, 10);
    // console.log(precio_costo);
     //Inicia validacion
     if (isNaN(cantidad)) {
-        $.Notification.notify('error', 'bottom center', 'NOTIFICACIÓN', 'LA CANTIDAD NO ES UN NUMERO, INTENTAR DE NUEVO')
+        $.Notification.notify('error', 'bottom center', 'NOTIFICACIÓN', 'LA CANTIDAD NO ES UN NÚMERO, INTENTAR DE NUEVO')
         document.getElementById('cantidad_' + id).focus();
         return false;
     }
+    if (isNaN(jornada)) {
+        $.Notification.notify('error', 'bottom center', 'NOTIFICACIÓN', 'LA JORNADA NO ES UN NÚMERO, INTENTAR DE NUEVO')
+        document.getElementById('jornada_' + id).focus();
+        return false;
+    }
     if (isNaN(precio_venta)) {
-        $.Notification.notify('error', 'bottom center', 'NOTIFICACIÓN', 'EL PRECIO NO ES UN NUMERO, INTENTAR DE NUEVO')
+        $.Notification.notify('error', 'bottom center', 'NOTIFICACIÓN', 'EL PRECIO NO ES UN NÚMERO, INTENTAR DE NUEVO')
         document.getElementById('precio_venta_' + id).focus();
         return false;
     }
-    if (precio_venta < (precio_costo+(precio_costo*0.1))) {
+    /*if (precio_venta < (precio_costo+(precio_costo*0.1))) {
         $.Notification.notify('error','bottom center','NOTIFICACIÓN', 'EL PRECIO ES MUY BAJO, INTENTAR DE NUEVO')
         document.getElementById('precio_venta_' + id).focus();
         return false;
-    }
+    }*/
     //Fin validacion
     $.ajax({
         type: "POST",
         url: "../ajax/agregar_tmp_modalcot.php",
-        data: "id=" + id + "&precio_venta=" + precio_venta + "&cantidad=" + cantidad + "&operacion=" + 2,
+        data: "id=" + id + "&precio_venta=" + precio_venta + "&cantidad=" + cantidad + "&jornada=" + jornada + "&operacion=" + 2,
         beforeSend: function(objeto) {
             $("#resultados").html('<img src="../../img/ajax-loader.gif"> Cargando...');
         },

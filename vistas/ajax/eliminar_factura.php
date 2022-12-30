@@ -1,10 +1,5 @@
 <?php
-/*-----------------------
-Autor: Delmar Lopez
-http://www.softwys.com
-Fecha: 03-01-2018
-Version de PHP: 7.0.0
-----------------------------*/
+
 include 'is_logged.php'; //Archivo verifica que el usario que intenta acceder a la URL esta logueado
 /* Connect To Database*/
 require_once "../db.php";

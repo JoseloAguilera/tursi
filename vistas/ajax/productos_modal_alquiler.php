@@ -1,5 +1,4 @@
 <?php
-/*-------------------------
 
 include 'is_logged.php'; //Archivo verifica que el usario que intenta acceder a la URL esta logueado
 /* Connect To Database*/
@@ -50,6 +49,7 @@ if ($action == 'ajax') {
                     <th class='text-center'>PRODUCTOS</th>
                     <th class='text-center'>STOCK</th>
                     <th class='text-center'>CANT</th>
+                    <th class='text-center'>JOR</th>
                     <th class='text-center'>PRECIO</th>
                     <th class='text-center' style="width: 36px;"></th>
                 </tr>
@@ -59,7 +59,7 @@ while ($row = mysqli_fetch_array($query)) {
             $codigo_producto = $row['codigo_producto'];
             $nombre_producto = $row['nombre_producto'];
             $stock_producto  = $row['stock_producto'];
-            $precio_venta    = $row["valor_venta"];
+            $precio_venta    = $row["valor_alquiler"];
             $precio_venta    = number_format($precio_venta, 0, '', '');
             $precio_costo    = $row['costo_producto'];
             $image_path      = $row['image_path'];
@@ -67,26 +67,32 @@ while ($row = mysqli_fetch_array($query)) {
                     <tr>
                         <td class='text-center'>
                         <?php
-if ($image_path == null) {
-                echo '<img src="../../img/productos/default.jpg" class="" width="60">';
-            } else {
-                echo '<img src="' . $image_path . '" class="" width="60">';
-            }
-
-            ?>
-                                <!--<img src="<?php echo $image_path; ?>" alt="Product Image" class='rounded-circle' width="60">-->
-                            </td>
-                            <td><?php echo $codigo_producto; ?></td>
+                            if ($image_path == null) {
+                                echo '<img src="../../img/productos/default.jpg" class="" width="60">';
+                            } else {
+                                echo '<img src="' . $image_path . '" class="" width="60">';
+                            }
+                        ?>
+                        <!--<img src="<?php echo $image_path; ?>" alt="Product Image" class='rounded-circle' width="60">-->
+                        </td>
+                        <td><?php echo $codigo_producto; ?></td>
                         <td><?php echo $nombre_producto; ?></td>
                         <td class="text-center"><?php echo stock($stock_producto); ?></td>
                         <td class='col-xs-1' width="15%">
-                        <div class="pull-right">
-                        <input type="text" class="form-control" style="text-align:center" id="cantidad_<?php echo $id_producto; ?>"  value="1" >
-                        </div>
+                            <div class="pull-right">
+                                <input type="text" class="form-control" style="text-align:center" id="cantidad_<?php echo $id_producto; ?>"  value="1" >
+                            </div>
                         </td>
-                        <td class='col-xs-2' width="15%"><div class="pull-right">
-                        <input type="text" class="form-control txt_price" style="text-align:right" id="precio_venta_<?php echo $id_producto; ?>"  value="<?php echo $precio_venta; ?>" >
-                        </div></td>
+                        <td class='col-xs-1' width="15%">
+                            <div class="pull-right">
+                                <input type="text" class="form-control" style="text-align:center" id="jornada_<?php echo $id_producto; ?>"  value="1" >
+                            </div>
+                        </td>
+                        <td class='col-xs-2' width="15%">
+                            <div class="pull-right">
+                                <input type="text" class="form-control txt_price" style="text-align:right" id="precio_venta_<?php echo $id_producto; ?>"  value="<?php echo $precio_venta; ?>" >
+                            </div>
+                        </td>
                         <input type="hidden" id="precio_costo_<?php echo $id_producto; ?>"  value="<?php echo $precio_costo; ?>" >
                         <td class='text-center'>
                         <a class='btn btn-success' href="#" title="Agregar a Factura" onclick="agregar('<?php echo $id_producto ?>')"><i class="fa fa-plus"></i>
