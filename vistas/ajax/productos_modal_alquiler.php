@@ -49,7 +49,6 @@ if ($action == 'ajax') {
                     <th class='text-center'>PRODUCTOS</th>
                     <th class='text-center'>STOCK</th>
                     <th class='text-center'>CANT</th>
-                    <th class='text-center'>JOR</th>
                     <th class='text-center'>PRECIO</th>
                     <th class='text-center' style="width: 36px;"></th>
                 </tr>
@@ -81,11 +80,6 @@ while ($row = mysqli_fetch_array($query)) {
                         <td class='col-xs-1' width="15%">
                             <div class="pull-right">
                                 <input type="text" class="form-control" style="text-align:center" id="cantidad_<?php echo $id_producto; ?>"  value="1" >
-                            </div>
-                        </td>
-                        <td class='col-xs-1' width="15%">
-                            <div class="pull-right">
-                                <input type="text" class="form-control" style="text-align:center" id="jornada_<?php echo $id_producto; ?>"  value="1" >
                             </div>
                         </td>
                         <td class='col-xs-2' width="15%">

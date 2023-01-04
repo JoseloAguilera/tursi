@@ -2,9 +2,10 @@
 
 include 'is_logged.php'; //Archivo verifica que el usario que intenta acceder a la URL esta logueado
 $session_id = session_id();
-$id_factura = $_SESSION['id_factura'];
+$id_factura = $_SESSION['id_version'];
 if (isset($_POST['id'])) {$id = $_POST['id'];}
 if (isset($_POST['cantidad'])) {$cantidad = $_POST['cantidad'];}
+if (isset($_POST['jornada'])) {$jornada = $_POST['jornada'];}
 
 /* Connect To Database*/
 require_once "../db.php";
@@ -12,9 +13,9 @@ require_once "../php_conexion.php";
 //Archivo de funciones PHP
 require_once "../funciones.php";
 
-if (!empty($id) and !empty($cantidad)) {
+if (!empty($id) and !empty($cantidad) and !empty($jornada)  ) {
     $id_producto    = get_row('productos', 'id_producto', 'codigo_producto', $id);
-    $numero_factura = get_row('facturas_cot', 'numero_factura', 'id_factura', $id_factura);
+    /* $id_version = get_row('facturas_cot', 'numero_factura', 'id_factura', $id_factura); */
     $precio_venta   = get_row('productos', 'valor_venta', 'id_producto', $id_producto);
 
     // consulta para comparar el stock con la cantidad resibida
@@ -71,6 +72,7 @@ $simbolo_moneda = get_row('perfil', 'moneda', 'id_perfil', 1);
             <tr>
                 <th class='text-center'>Cod</th>
                 <th class='text-center'>Cant.</th>
+                <th class='text-center'>Jor.</th>
                 <th class='text-center'>Producto.</th>
                 <th class='text-center'>Precio <?php echo $simbolo_moneda; ?></th>
                 <th class='text-center'>Desc %</th>
@@ -92,12 +94,13 @@ $total_impuesto10 = 0;
 $sub_0=0;
 $sub_5=0;
 $sub_10=0;
-$sql            = mysqli_query($conexion, "select * from productos, facturas_cot, detalle_fact_cot where facturas_cot.id_factura=detalle_fact_cot.id_factura and  facturas_cot.id_factura='$id_factura' and productos.id_producto=detalle_fact_cot.id_producto");
+$sql            = mysqli_query($conexion, "select * from productos, facturas_cot, detalle_fact_cot where facturas_cot.id_version=detalle_fact_cot.id_version and  facturas_cot.id_version='$id_factura' and productos.id_producto=detalle_fact_cot.id_producto");
 while ($row = mysqli_fetch_array($sql)) {
     $id_detalle      = $row["id_detalle"];
     $id_producto     = $row["id_producto"];
     $codigo_producto = $row['codigo_producto'];
     $cantidad        = $row['cantidad'];
+    $jornada         = $row['jornada'];
     $desc_tmp        = $row['desc_venta'];
     $nombre_producto = $row['nombre_producto'];
 
@@ -127,30 +130,36 @@ while ($row = mysqli_fetch_array($sql)) {
     }
     ?>
     <tr>
-        <td class='text-center'><?php echo $codigo_producto; ?></td>
-        <td class='text-center'><?php echo $cantidad; ?></td>
+        <td class='text-center' width="7%"><?php echo $codigo_producto; ?></td>
+        <td class='text-center' width="7%"><?php echo $cantidad; ?></td>
+        <td align="right" width="7%">
+            <input type="text" class="form-control txt_jor" style="text-align:center" value="<?php echo $jornada; ?>" id="<?php echo "jornada_".$id_detalle; ?>">
+        </td>
         <td><?php echo $nombre_producto; ?></td>
-        <td class='text-center'>
+        <td align="right" width="15%">
+            <input type="text" class="form-control txt_precio" style="text-align:center" value="<?php echo $precio_venta; ?>" id="<?php echo  "precio_".$id_detalle; ?>">
+        </td>
+        <!-- <td class='text-center'>
             <div class="input-group">
-                <select id="<?php echo $id_detalle; ?>" class="form-control employee_id">
+                <select id="<?php //echo $id_detalle; ?>" class="form-control employee_id">
                     <?php
-$sql1 = mysqli_query($conexion, "select * from productos where id_producto='" . $id_producto . "'");
-    while ($rw1 = mysqli_fetch_array($sql1)) {
+//$sql1 = mysqli_query($conexion, "select * from productos where id_producto='" . $id_producto . "'");
+   // while ($rw1 = mysqli_fetch_array($sql1)) {
         ?>
-                        <option selected disabled value="<?php echo $precio_venta ?>"><?php echo number_format($precio_venta, 0, '', ''); ?></option>
-                        <option value="<?php echo $rw1['valor_venta'] ?>">PV <?php echo number_format($rw1['valor_venta'], 0, '', ''); ?></option>
-                        <option value="<?php echo $rw1['valor_alquiler'] ?>">PM <?php echo number_format($rw1['valor_alquiler'], 0, '', ''); ?></option>
-                        <option value="<?php echo $rw1['valor3_producto'] ?>">PE <?php echo number_format($rw1['valor3_producto'], 0, '', ''); ?></option>
+                        <option selected disabled value="<?php //echo $precio_venta ?>"><?php// echo number_format($precio_venta, 0, '', ''); ?></option>
+                        <option value="<?php //echo $rw1['valor_venta'] ?>">PV <?php //echo number_format($rw1['valor_venta'], 0, '', ''); ?></option>
+                        <option value="<?php //echo $rw1['valor_alquiler'] ?>">PM <?php //echo number_format($rw1['valor_alquiler'], 0, '', ''); ?></option>
+                        <option value="<?php //echo $rw1['valor3_producto'] ?>">PE <?php //echo number_format($rw1['valor3_producto'], 0, '', ''); ?></option>
                         <?php
-}
+//}
     ?>
                 </select>
             </div>
-        </td>
-        <td align="right" width="15%">
+        </td> -->
+        <td align="right" width="10%">
             <input type="text" class="form-control txt_desc" style="text-align:center" value="<?php echo $desc_tmp; ?>" id="<?php echo $id_detalle; ?>">
         </td>
-        <td class='text-right'><?php echo $simbolo_moneda . ' ' . number_format($final_items, 0, '', ''); ?></td>
+        <td class='text-right'  width="10%"><?php echo $simbolo_moneda . ' ' . number_format($final_items, 0, '', '.'); ?></td>
         <td class='text-center'>
             <a href="#" class='btn btn-danger btn-sm waves-effect waves-light' onclick="eliminar('<?php echo $id_detalle ?>')"><i class="fa fa-remove"></i>
             </a>
@@ -255,8 +264,8 @@ permisos($modulo, $cadena_permisos);
         // }
     });
 
-          $(".employee_id").on("change", function(event) {
-         id_detalle = $(this).attr("id");
+        $(".txt_precio").on("blur", function(event) {
+        id_detalle = $(this).attr("id");
         precio = $(this).val();
         $.ajax({
             type: "POST",

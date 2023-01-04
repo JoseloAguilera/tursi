@@ -72,7 +72,7 @@ while ($row = mysqli_fetch_array($query)) {
             $total_presu    = $row['monto_factura'];
             $simbolo_moneda = get_row('perfil', 'moneda', 'id_perfil', 1);
             $nombre_vendedor  = $row['nombre_users'] . " " . $row['apellido_users'];
-            if($row['fecha_reserva'] != null){
+            if($row['fecha_reserva'] != null && $row['fecha_reserva'] != '0000-00-00'){
                 $reserva = date("d/m/Y", strtotime($row['fecha_reserva']));
             }else{
                 $reserva = "A Definir";

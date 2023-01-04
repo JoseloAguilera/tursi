@@ -22,25 +22,33 @@ $nombre_usuario = get_row('users', 'usuario_users', 'id_users', $user_id);
 
 if (isset($_GET['id_version'])) {
     $id_version  = intval($_GET['id_version']);
-    $campos      = "clientes.id_cliente, clientes.nombre_cliente, clientes.fiscal_cliente, clientes.email_cliente, facturas_cot.user, facturas_cot.fecha_version, facturas_cot.condiciones, facturas_cot.validez, facturas_cot.version";
-    $sql_factura = mysqli_query($conexion, "select $campos from facturas_cot, clientes where facturas_cot.id_cliente=clientes.id_cliente and id_version='" . $id_version . "'");
+    $campos      = "clientes.id_cliente, clientes.nombre_cliente, clientes.fiscal_cliente, clientes.telefono_cliente, facturas_cot.user,facturas_cot.fecha_reserva, facturas_cot.condiciones, 
+					facturas_cot.validez, facturas_cot.version, facturas_cot.pie1, facturas_cot.pie2, facturas_cot.pie3, facturas_cot.obs, cotizaciones.numero_presupuesto";
+    $sql_factura = mysqli_query($conexion, "select $campos from facturas_cot, clientes, cotizaciones where facturas_cot.id_cliente=clientes.id_cliente and  
+					facturas_cot.id_presupuesto=cotizaciones.id_presupuesto and id_version='" . $id_version . "'");
     $count       = mysqli_num_rows($sql_factura);
     if ($count == 1) {
         $rw_factura                 = mysqli_fetch_array($sql_factura);
         $id_cliente                 = $rw_factura['id_cliente'];
         $nombre_cliente             = $rw_factura['nombre_cliente'];
         $fiscal_cliente             = $rw_factura['fiscal_cliente'];
-        $email_cliente              = $rw_factura['email_cliente'];
-        $id_vendedor_db             = $rw_factura['id_vendedor'];
-        $fecha_factura              = date("d/m/Y", strtotime($rw_factura['fecha_factura']));
+        $telefono_cliente           = $rw_factura['telefono_cliente'];
+        /* $id_vendedor_db             = $rw_factura['id_vendedor']; */
+        $fecha_reserva              = date("d/m/Y", strtotime($rw_factura['fecha_reserva']));
         $condiciones                = $rw_factura['condiciones'];
         $validez                    = $rw_factura['validez'];
-        $numero_factura             = $rw_factura['numero_factura'];
+		$version					= $rw_factura['version'];
+		$pie1						= $rw_factura['pie1'];
+		$pie2						= $rw_factura['pie2'];
+		$pie2						= $rw_factura['pie3'];
+		$obs						= $rw_factura['obs'];
+        $numero_presupuesto         = $rw_factura['numero_presupuesto'];	
         $_SESSION['id_version']     = $id_version;
         //$_SESSION['numero_factura'] = $numero_factura;
     } else {
         //var_dump($_GET['id_version']);
 		//header("location: facturas.php");
+		echo "<script> $.Notification.notify('error','bottom center','ERROR', 'UN ERROR HA OCURRIDO, CONTACTE CON EL DESARROLLADOR')</script>";
         exit;
     }
 } else {
@@ -76,7 +84,7 @@ while ($r = $query->fetch_object()) {$tipo[] = $r;}
 						<div class="portlet">
 							<div class="portlet-heading bg-primary">
 								<h3 class="portlet-title">
-									Editar Cotización
+									Editar Presupuesto <?php echo $numero_presupuesto?> - Version <?php echo $version?> 
 								</h3>
 								<div class="portlet-widgets">
 								</div>
@@ -132,27 +140,58 @@ include "../modal/buscar_productos_ventas.php";
 												<div class="widget-chart">
 												<div class="editar_factura" class='col-md-12' style="margin-top:10px"></div><!-- Carga los datos ajax -->
 													<form role="form" id="datos_factura">
-														<input id="id_vendedor" name="id_vendedor" type='hidden' value="<?php echo $id_vendedor_db; ?>">
+														<input id="id_vendedor" name="id_vendedor" type='hidden' value="<?php echo $user_id; ?>">
+														<div class="row">
+																<div class="col-md-6">
+																	<div class="form-group">
+																		<label for="reserva">Fecha Reserva</label>
+																		<input type="date" class="form-control" autocomplete="off" id="reserva" name="fecha_reserva" value="<?php echo $fecha_reserva; ?>">
+																	</div>
+																</div>
+														</div>
 														<div class="form-group row">
 															<label class="col-2 col-form-label"></label>
 															<div class="col-12">
 																<div class="input-group">
-																	<input type="text" id="nombre_cliente" class="form-control" required value="<?php echo $nombre_cliente; ?>" tabindex="2">
+																	<input type="text" id="nombre_cliente" class="form-control" required value="<?php echo $nombre_cliente; ?>" tabindex="2" readonly>
 																	<span class="input-group-btn">
-																		<button type="button" class="btn waves-effect waves-light btn-success" data-toggle="modal" data-target="#nuevoCliente"><li class="fa fa-plus"></li></button>
+																		<!--button type="button" class="btn waves-effect waves-light btn-success" data-toggle="modal" data-target="#nuevoCliente"><li class="fa fa-plus"></li></button-->
 																	</span>
 																	<input id="id_cliente" name="id_cliente" type='hidden' value="<?php echo $id_cliente; ?>">
 																</div>
 															</div>
 														</div>
 														<div class="row">
-															<div class="col-md-6">
+															<div class="col-md-12">
 																<div class="form-group">
-																	<label for="cotizacion">No. Cotización</label>
-																	<input type="text" class="form-control" autocomplete="off" id="cotizacion"  name="cotizacion" value="<?php echo $numero_factura; ?>" readonly>
+																	<label for="tel1">Telefono</label>
+																	<input type="text" class="form-control" autocomplete="off" id="tel1" disabled="true" value="<?php echo $fiscal_cliente; ?>" readonly>
 																</div>
 															</div>
-																<div class="col-md-6">
+														</div>
+														<div class="row">
+															<div class="col-md-6">
+																<div class="form-group">
+																	<label for="fiscal">RUC | Cédula</label>
+																	<input type="text" class="form-control" autocomplete="off" id="rnc" name="rnc" disabled="true" value="<?php echo $fiscal_cliente; ?>">
+																</div>
+															</div>
+															<div class="col-md-6">
+																<div class="form-group">
+																	<label for="cotizacion">No. Presupuesto</label>
+																	<input type="text" class="form-control" autocomplete="off" id="cotizacion"  name="cotizacion" value="<?php echo $numero_presupuesto." - ".$version; ?>" readonly>
+																</div>
+															</div>
+															<div class="col-md-6">
+																<div class="form-group">
+																	<label for="fiscal">Pago</label>
+																	<select class='form-control input-sm' id="condiciones" name="condiciones" onchange="showDiv(this)">
+																		<option value="1" <?php if ($condiciones == 1) {echo "selected";}?>>Contado</option>
+																		<option value="4" <?php if ($condiciones == 4) {echo "selected";}?>>Credito</option>
+																	</select>
+																</div>
+															</div>
+															<div class="col-md-6">
 																<div class="form-group">
 																	<label for="validez">Validez</label>
 																	<select class='form-control' id="validez" name="validez">
@@ -166,56 +205,43 @@ include "../modal/buscar_productos_ventas.php";
 															</div>
 														</div>
 														<div class="row">
+															
+															
 															<div class="col-md-6">
-																<div class="form-group">
-																	<label for="fiscal">RUC | Cédula</label>
-																	<input type="text" class="form-control" autocomplete="off" id="rnc" name="rnc" disabled="true" value="<?php echo $fiscal_cliente; ?>">
-																</div>
-															</div>
-															<div class="col-md-6">
-																<div class="form-group">
+																<!-- <div class="form-group">
 																	<label for="id_comp" class="control-label">Comprobante:</label>
 																	<select id = "id_comp" class = "form-control" name = "id_comp" required autocomplete="off" onchange="getval(this);">
 																		<option value="">-SELECCIONE-</option>
-																		<?php foreach ($tipo as $c): ?>
-																			<option value="<?php echo $c->id_comp; ?>"><?php echo $c->nombre_comp; ?></option>
-																		<?php endforeach;?>
+																		<?php //foreach ($tipo as $c): ?>
+																			<option value="<?php //echo $c->id_comp; ?>"><?php //echo $c->nombre_comp; ?></option>
+																		<?php //endforeach;?>
 																	</select>
-																</div>
+																</div> -->
 															</div>
 
 														</div>
 														<div class="row">
-															<div class="col-md-12">
+															<!-- <div class="col-md-12">
 																<div class="form-group">
 																	<label for="fiscal">No. Comprobante</label>
-																	<div id="outer_comprobante"></div><!-- Carga los datos ajax -->
+																	<div id="outer_comprobante"></div>
 																</div>
-															</div>
-															
-														<div class="row">
-															<div class="col-md-6">
-																<div class="form-group">
-																	<label for="fiscal">Pago</label>
-																	<select class='form-control input-sm' id="condiciones" name="condiciones" onchange="showDiv(this)">
-																		<option value="1" <?php if ($condiciones == 1) {echo "selected";}?>>Contado</option>
-																		<option value="4" <?php if ($condiciones == 4) {echo "selected";}?>>Credito</option>
-																	</select>
-																</div>
-															</div>
-															<div class="col-md-6">
-																<div class="form-group">
-																	<div id="resultados3"></div><!-- Carga los datos ajax del incremento de la fatura -->
-																</div>
-															</div>
+															</div> -->
 														</div>
+														<!-- <div class="row">
+															<div class="col-md-6">
+																<div class="form-group">
+																	<div id="resultados3"></div>
+																</div>
+															</div>
+														</div> -->
 														<div class="row">
 															<div class="col-md-6">
 																<button type="button" class="btn btn-danger waves-effect waves-light" aria-haspopup="true" aria-expanded="false" id="btn_actualizar"><span class="fa fa-refresh"></span> Actualizar</button>
 															</div>
-															<div class="col-md-6">
+															<!-- <div class="col-md-6">
 																<button type="submit" class="btn btn-default waves-effect waves-light" id="btn_guardar"><span class="ti-shopping-cart-full"></span> Facturar</button>
-															</div>
+															</div> -->
 														</div>
 													</form>
 

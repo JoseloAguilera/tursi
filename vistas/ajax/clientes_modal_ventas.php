@@ -88,7 +88,7 @@ while ($row = mysqli_fetch_array($query)) {
                         
                         
                         <td class='text-center'>
-                        <a class='btn btn-success' href="#" title="Agregar Cliente" onclick="agregar_cliente('<?php echo $id_client ?>','<?php echo $nombre_cliente ?>','<?php echo $fiscal_cliente ?>','<?php echo $correo ?>')"><i class="fa fa-plus"></i>
+                        <a class='btn btn-success' href="#" title="Agregar Cliente" onclick="agregar_cliente('<?php echo $id_client ?>','<?php echo $nombre_cliente ?>','<?php echo $fiscal_cliente ?>','<?php echo $telefono_cliente ?>')"><i class="fa fa-plus"></i>
                         </a>
                         </td>
                     </tr>

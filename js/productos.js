@@ -30,6 +30,7 @@
 		        },
 		        success: function(datos) {
 		            $("#resultados_ajax").html(datos);
+					$("#load_img").html('<img src="../../img/productos/default.jpg" class="thumb-img" width="200" alt="Bussines profile picture">');
 		            $('#guardar_datos').attr("disabled", false);
 		            $("#cod_resultado").load("../ajax/incrementa_cod_prod.php");
 		            load(1);

@@ -32,17 +32,23 @@ if (empty($_POST['id_cliente'])) {
     $numero_factura = mysqli_real_escape_string($conexion, (strip_tags($_REQUEST["factura"], ENT_QUOTES)));
     $validez        = floatval($_POST['validez']);
     $fecha_version  = date("Y-m-d");
-    if($_POST['fecha_reserva'] == ""){
+    if(($_POST['fecha_reserva'] == "") || ($_POST['fecha_reserva']== '0000-00-00')){
         $fecha_reserva = null;
     }else{
-        $fecha_reserva = $_POST['fecha_reserva'];
+        $fecha_reserva = "'".$_POST['fecha_reserva']."'";
     }
+   /*  var_dump($_POST['fecha_reserva']);
+    var_dump($fecha_reserva);   */ 
     //Operacion de Creditos
     if ($condiciones == 4) {
         $estado = 2;
     } else {
         $estado = 1;
     }
+    $pie1 = $_POST['pie1'];
+    $pie2 = $_POST['pie2'];
+    $pie3 = $_POST['pie3'];
+    $obs  = $_POST['obs'];
 
     $insert_cotizacion = mysqli_query($conexion, "INSERT INTO cotizaciones VALUES (NULL,'$numero_factura','$id_cliente','$id_vendedor')");
     $sql        = mysqli_query($conexion, "select LAST_INSERT_ID(id_presupuesto) as last from cotizaciones order by last desc limit 0,1 ");
@@ -90,6 +96,7 @@ if (empty($_POST['id_cliente'])) {
         $id_producto     = $row['id_producto'];
         $codigo_producto = $row['codigo_producto'];
         $cantidad        = $row['cantidad_tmp'];
+        $jornada         = $row['jornada_tmp'];
         $desc_tmp        = $row['desc_tmp'];
         $nombre_producto = $row['nombre_producto'];
         // control del impuesto por productos.
@@ -112,7 +119,7 @@ if (empty($_POST['id_cliente'])) {
         $precio_venta   = $row['precio_tmp'];
         $precio_venta_f = number_format($precio_venta, 0, '', ''); //Formateo variables
         //$precio_venta_r = str_replace(",", "", $precio_venta_f); //Reemplazo las comas
-        $precio_total   = $precio_venta * $cantidad;
+        $precio_total   = $precio_venta * $cantidad * $jornada;
         $final_items    = rebajas($precio_total, $desc_tmp); //Aplicando el descuento
         /*--------------------------------------------------------------------------------*/
         $precio_total_f = number_format($final_items, 0, '', ''); //Precio total formateado
@@ -121,28 +128,29 @@ if (empty($_POST['id_cliente'])) {
         //Comprobamos que el dinero Resibido no sea menor al Totalde la factura
         if ($row['iva_producto'] == 10) {
             //$total_iva = iva($precio_venta);
-            $sub_10 += $precio_venta;
-            $total_iva10 = $precio_venta/11;
+            $sub_10 += $precio_total;
+            $total_iva10 = $precio_total/11;
             $total_impuesto10 += (rebajas($total_iva10, $desc_tmp) * $cantidad);
         } elseif ($row['iva_producto'] == 5) {
-            $sub_5 += $precio_venta;
-            $total_iva5 = $precio_venta/21;
+            $sub_5 += $precio_total;
+            $total_iva5 = $precio_total/21;
             $total_impuesto5 += (rebajas($total_iva5, $desc_tmp) * $cantidad);
         }else {
-            $sub_0 += $precio_venta;
-            $total_iva0 = $precio_venta;
+            $sub_0 += $precio_total;
+            $total_iva0 = $precio_total;
             $total_impuesto0 += (rebajas($total_iva0, $desc_tmp) * $cantidad);
         }
 
         //Insert en la tabla detalle_factura
-        $insert_detail = mysqli_query($conexion, "INSERT INTO detalle_fact_cot VALUES (NULL,'$id_version','$id_producto','$cantidad','$desc_tmp','$precio_venta')");
+        $insert_detail = mysqli_query($conexion, "INSERT INTO detalle_fact_cot VALUES (NULL,'$id_version','$id_producto','$cantidad','$jornada','$desc_tmp','$precio_venta')");
     }
     // Fin de la consulta Principal
     $subtotal      = number_format($sumador_total, 0, '', '.');
     //$total_iva     = ($subtotal * $impuesto) / 100;
     //$total_iva     = number_format($total_iva, 2, '.', '') - number_format($t_iva, 2, '.', '');
     $total_factura = $sumador_total;
-    $insert_version        = mysqli_query($conexion, "INSERT INTO facturas_cot VALUES (NULL,'$id_presupuesto','$fecha_version','$fecha_reserva','$condiciones','$total_factura','1','$validez', '$users', '0','$id_cliente')");
+    $fecha_modificacion = date("Y-m-d");
+    $insert_version        = mysqli_query($conexion, "INSERT INTO facturas_cot VALUES (NULL,'$id_presupuesto','$fecha_version','$fecha_reserva','$condiciones','$total_factura','1','$validez', '$users', '0','$id_cliente','$pie1','$pie2','$pie3','$obs', '$fecha_modificacion' )");
     
     $delete        = mysqli_query($conexion, "DELETE FROM tmp_cotizacion WHERE session_id='" . $session_id . "'");
     // SI TODO ESTA CORRECTO

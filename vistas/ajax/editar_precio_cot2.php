@@ -12,6 +12,8 @@ if (empty($_POST['id_detalle'])) {
     // escaping, additionally removing everything that could be (html/javascript-) code
     $id_detalle = intval($_POST['id_detalle']);
     $precio     = floatval($_POST['precio']);
+    var_dump($id_detalle);
+    var_dump($precio);
 
     $sql          = "UPDATE detalle_fact_cot SET  precio_venta='" . $precio . "' WHERE id_detalle='" . $id_detalle . "'";
     $query_update = mysqli_query($conexion, $sql);

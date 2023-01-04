@@ -28,6 +28,7 @@ if (($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jp
         move_uploaded_file($_FILES["imagefile_mod"]["tmp_name"], $target_file);
         $imagen     = basename($_FILES["imagefile_mod"]["name"]);
         $img_update = "image_path = '../../img/productos/$image_name' ";
+        //var_dump($img_update);
 
     } else { $img_update = "";}
 

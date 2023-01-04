@@ -49,7 +49,7 @@ if (isset($conexion)) {
 									<div class="col-md-12">
 										<div class="form-group">
 											<label for="descripcion" class="control-label">Descripción</label>
-											<textarea class="form-control UpperCase"  id="descripcion" name="descripcion" maxlength="255" autocomplete="off"></textarea>
+											<textarea class="form-control UpperCase"  id="descripcion" name="descripcion" maxlength="2000" autocomplete="off"></textarea>
 										</div>
 									</div>
 								</div>
@@ -74,7 +74,7 @@ if (isset($conexion)) {
 									<div class="col-md-6">
 										<div class="form-group">
 											<label for="proveedor" class="control-label">Proveedor:</label>
-											<select class='form-control' name='proveedor' id='proveedor' required>
+											<select class='form-control' name='proveedor' id='proveedor'>
 												<option value="">-- Selecciona --</option>
 												<?php
 
@@ -131,7 +131,7 @@ if (isset($conexion)) {
 									<div class="col-md-6">
 										<div class="form-group">
 											<label for="costo" class="control-label">Costo:</label>
-											<input type="text" class="form-control" id="costo" name="costo" autocomplete="off" pattern="^[0-9]{1,100}?$" title="Ingresa sólo números con 0 ó 2 decimales" maxlength="100" required>
+											<input type="text" class="form-control" id="costo" name="costo" autocomplete="off" pattern="^[0-9]{1,100}?$" title="Ingresa sólo números enteros" maxlength="100" >
 										</div>
 									</div>
 									<div class="col-md-6">
@@ -152,9 +152,9 @@ if (isset($conexion)) {
 									<div class="col-md-6">
 										<div class="form-group">
 											<label for="preciom" class="control-label">Precio Alquiler:</label>
-											<input type="text" class="form-control" id="preciom" name="preciom" autocomplete="off" pattern="^[0-9]{1,100}?$" title="Ingresa sólo números con 0 ó 2 decimales" maxlength="100">
+											<input type="text" class="form-control" id="preciom" name="preciom" autocomplete="off" pattern="^[0-9]{1,100}?$" title="Ingresa sólo números con 0 ó 2 decimales" maxlength="100" required>
 										</div>
-									</div>
+									</div>	
 									<!--div class="col-md-4">
 										<div class="form-group">
 											<label for="precioe" class="control-label">Precio Especial:</label>
@@ -170,7 +170,7 @@ if (isset($conexion)) {
 											<label for="inv" class="control-label">Maneja Inventario:</label>
 											<select class="form-control" id="inv" name="inv" required>
 												<option value="">- Selecciona -</option>
-												<option value="0">Si</option>
+												<option value="0" selected>Si</option>
 												<option value="1">No</option>
 											</select>
 										</div>
@@ -178,13 +178,13 @@ if (isset($conexion)) {
 									<div class="col-md-4">
 										<div class="form-group">
 											<label for="stock" class="control-label">Stock Inicial:</label>
-											<input type="text" class="form-control" id="stock" name="stock" autocomplete="off" pattern="^[0-9]{1,5}(\.[0-9]{0,2})?$" title="Ingresa sólo números con 0 ó 2 decimales" value="1" maxlength="8">
+											<input type="text" class="form-control" id="stock" name="stock" autocomplete="off" pattern="^[0-9]{1,5}(\.[0-9]{0,2})?$" title="Ingresa sólo números con 0 ó 2 decimales" value="1" maxlength="100">
 										</div>
 									</div>
 									<div class="col-md-4">
 										<div class="form-group">
 											<label for="minimo" class="control-label">Stock Minimo:</label>
-											<input type="text" class="form-control" id="minimo" name="minimo" autocomplete="off" pattern="^[0-9]{1,5}(\.[0-9]{0,2})?$" title="Ingresa sólo números con 0 ó 2 decimales" value="1" maxlength="8">
+											<input type="text" class="form-control" id="minimo" name="minimo" autocomplete="off" pattern="^[0-9]{1,5}(\.[0-9]{0,2})?$" title="Ingresa sólo números con 0 ó 2 decimales" value="1" maxlength="100">
 										</div>
 									</div>
 

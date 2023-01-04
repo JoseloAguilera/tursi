@@ -177,19 +177,19 @@ $nombre_usuario = get_row('users', 'usuario_users', 'id_users', $user_id);
 														<div class="row">
 															<div class="col-md-12">
 																<div class="form-check">
-																	<input class="form-check-input" type="checkbox" value="En caso de modificar la/s fecha/s estarán sujetas según disponibilidad de TURSI PRODUCCIONES." id="pie1">
+																	<input class="form-check-input" type="checkbox" value="En caso de modificar la/s fecha/s estarán sujetas según disponibilidad de TURSI PRODUCCIONES." id="pie1" name="pie1">
 																	<label class="form-check-label" for="pie1">
 																		En caso de modificar la/s fecha/s estarán sujetas según <br> disponibilidad de TURSI PRODUCCIONES.
 																	</label>
 																</div>
 																<div class="form-check">
-																	<input class="form-check-input" type="checkbox" value="Las horas extras inician a partir de contados 16 (dieciséis) minutos de retraso desde la hora de devolución pactada, y así sucesivamente." id="pie2">
+																	<input class="form-check-input" type="checkbox" value="Las horas extras inician a partir de contados 16 (dieciséis) minutos de retraso desde la hora de devolución pactada, y así sucesivamente." id="pie2" name="pie2">
 																	<label class="form-check-label" for="pie2">
 																	Las horas extras inician a partir de contados 16 (dieciséis) minutos de retraso desde la hora de devolución pactada, y así sucesivamente.
 																	</label>
 																</div>
 																<div class="form-check">
-																	<input class="form-check-input" type="checkbox" value="LOS EQUIPOS NO CUENTAN CON SEGURO Y EL CLIENTE SE HACE RESPONSABLE POR DAÑOS Y/O EXTRAVIOS." id="pie3">
+																	<input class="form-check-input" type="checkbox" value="LOS EQUIPOS NO CUENTAN CON SEGURO Y EL CLIENTE SE HACE RESPONSABLE POR DAÑOS Y/O EXTRAVIOS." id="pie3" name="pie3">
 																	<label class="form-check-label" for="pie3">
 																	LOS EQUIPOS NO CUENTAN CON SEGURO Y EL CLIENTE SE HACE RESPONSABLE POR DAÑOS Y/O EXTRAVIOS.
 																	</label>
@@ -199,8 +199,8 @@ $nombre_usuario = get_row('users', 'usuario_users', 'id_users', $user_id);
 														<div class="row">
 															<div class="col-md-12">
 																<div class="form-group">
-																	<label for="">Observaciones</label>
-																	<input type="textarea">	
+																	<label for="obs">Observaciones</label>
+																	<input type="textarea" name="obs" id="obs" >	
 																</div>
 															</div>
 														</div>
@@ -264,7 +264,7 @@ $nombre_usuario = get_row('users', 'usuario_users', 'id_users', $user_id);
 <!-- Codigos Para el Auto complete de Clientes -->
 <script>
 
-function agregar_cliente(id,nombre,ruc, correo) {
+function agregar_cliente(id,nombre,ruc, telefono) {
     //var id_cliente = id;
     //console.log(id);
 	//console.log(nombre);
@@ -272,7 +272,7 @@ function agregar_cliente(id,nombre,ruc, correo) {
 	var id_cliente = String(id);
 	$('#id_cliente').val(id_cliente);
 	$("#nombre_cliente").val(nombre);
-	$('#tel1').val(ruc);
+	$('#tel1').val(telefono);
 	$('#fiscal').val(ruc);
 	$('#buscar_cliente').modal('hide');
 	$.Notification.notify('custom','bottom right','EXITO!', 'CLIENTE AGREGADO CORRECTAMENTE')

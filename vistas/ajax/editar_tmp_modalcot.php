@@ -5,6 +5,7 @@ $id_factura     = $_SESSION['id_factura'];
 $numero_factura = $_SESSION['numero_factura'];
 if (isset($_POST['id'])) {$id = intval($_POST['id']);}
 if (isset($_POST['cantidad'])) {$cantidad = intval($_POST['cantidad']);}
+if (isset($_POST['jornada'])) {$jornada = $_POST['jornada'];}
 if (isset($_POST['precio_venta'])) {$precio_venta = floatval($_POST['precio_venta']);}
 
 /* Connect To Database*/

@@ -9,7 +9,6 @@ require_once "../php_conexion.php";
 require_once "../funciones.php";
 if (isset($_POST['id'])) {$id = $_POST['id'];}
 if (isset($_POST['cantidad'])) {$cantidad = $_POST['cantidad'];}
-if (isset($_POST['jornada'])) {$jornada = $_POST['jornada'];}
 if (isset($_POST['precio_venta'])) {$precio_venta = $_POST['precio_venta'];}
 
 
@@ -24,7 +23,7 @@ if (!empty($id) and !empty($cantidad) and !empty($precio_venta)) {
     $comprobar = mysqli_query($conexion, "select * from tmp_cotizacion, productos where productos.id_producto = tmp_cotizacion.id_producto and tmp_cotizacion.id_producto='" . $id . "' and tmp_cotizacion.session_id='" . $session_id . "'");
     if ($row = mysqli_fetch_array($comprobar)) {
         $cant = $row['cantidad_tmp'] + $cantidad;
-        $jor = $row['jornada_tmp'] + $jornada;
+        $jor = $row['jornada_tmp'];
 // condicion si el stock e menor que la cantidad requerida
         $sql          = "UPDATE tmp_cotizacion SET cantidad_tmp='" . $cant . "', jornada_tmp='" . $jor . "',precio_tmp='" . $precio_venta . "' WHERE id_producto='" . $id . "' and session_id='" . $session_id . "'";
         $query_update = mysqli_query($conexion, $sql);

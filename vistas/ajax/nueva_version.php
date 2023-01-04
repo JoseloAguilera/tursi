@@ -20,13 +20,14 @@ if ($action == 'ajax') {
     $sql1 = "SELECT MAX(version) AS version_presu, MAX(id_version) AS id_version FROM facturas_cot WHERE id_presupuesto = $id_presupuesto;";
     $query1 = mysqli_query($conexion, $sql1);
     $row1 = mysqli_fetch_array($query1);
-    $sql3 = "SELECT * FROM facturas_cot WHERE id_presupuesto = ".$row1['id_version'];
+    $sql3 = "SELECT * FROM facturas_cot WHERE id_version = ".$row1['id_version'];
+    //echo $sql3;
     $query3 = mysqli_query($conexion, $sql3);
     $row3 = mysqli_fetch_array($query3);
     $fecha_version  = date("Y-m-d");
     $nueva_version = $row1['version_presu'] + 1;
-    $sql4 = "INSERT INTO facturas_cot ('id_presupuesto', 'fecha_version', 'fecha_reserva', 'condiciones', 'monto_factura', 'version', 
-                'validez', 'user', 'confirmado', 'id_cliente') VALUES ( ".
+    $sql4 = "INSERT INTO facturas_cot (`id_presupuesto`, `fecha_version`, `fecha_reserva`, `condiciones`, `monto_factura`, `version`, 
+                `validez`, `user`, `confirmado`, `id_cliente`) VALUES ( ".
                 $row3['id_presupuesto'].", '" . 
                 $fecha_version."', " . 
                 "NULL, " . 
@@ -38,17 +39,17 @@ if ($action == 'ajax') {
                 "0, " .
                 $row3['id_cliente'].  
                 ")";
-    echo $row1['id_version'];
+    //echo $row1['id_version'];
     $sql2 = "SELECT * FROM detalle_fact_cot WHERE id_version = ".$row1['id_version'];
     $query2 = mysqli_query($conexion, $sql2);
     //$row2 = mysqli_fetch_array($query2);
     //var_dump($row2);
-    //$query4 = mysqli_query($conexion, $sql4);
-    $query4 = 0;
-    if ($query4 == 0){
+    $query4 = mysqli_query($conexion, $sql4);
+    //var_dump($sql4);
+    if ($query4){
         $sql5 = mysqli_query($conexion, "SELECT LAST_INSERT_ID(id_detalle) AS last_id FROM detalle_fact_cot order by id_detalle desc limit 0,1 ;");
         $row5 = mysqli_fetch_array($sql5);
-        $sql6 = "INSERT INTO detalle_fact_cot ('id_version', 'id_producto', 'cantidad', 'jornada', 'desc_venta', 'precio_venta') VALUES ";
+        $sql6 = "INSERT INTO detalle_fact_cot (`id_version`, `id_producto`, `cantidad`, `jornada`, `desc_venta`, `precio_venta`) VALUES ";
                 while($row2 = mysqli_fetch_array($query2)){
                     $sql6 .=" (".
                 $row5['last_id'].", ".
@@ -59,14 +60,23 @@ if ($action == 'ajax') {
                 $row2['precio_venta']. "),";
         }
         $sql6 = substr_replace($sql6, ";", -1);
+        $query6 = mysqli_query($conexion, $sql6);
+         //$row6 = mysqli_fetch_array($query6);
+        if($query6){
+            echo "<script> $.Notification.notify('success','bottom center','NOTIFICACIÓN', 'NUEVA VERSION REGISTRADA CON ÉXITO')</script>";
+        }else{
+            echo "<script> $.Notification.notify('error','bottom center','ERROR', 'UN ERROR HA OCURRIDO, CONTACTO CON EL DESARROLLADOR, ERROR 2')</script>";
+        }
+    }else{
+        echo "<script> $.Notification.notify('error','bottom center','ERROR', 'UN ERROR HA OCURRIDO, CONTACTO CON EL DESARROLLADOR, ERROR 1')</script>";
     }
-    var_dump($row5);
-    var_dump($sql6);
+//    var_dump($row5);
+//    var_dump($sql6);
 /*     $sqll = "SELECT LAST_INSERT_ID(id_detalle) AS last_id FROM detalle_fact_cot order by id_detalle desc limit 0,1 ;";
     $queryy = mysqli_query($conexion, $sqll);
     $roww = mysqli_fetch_array($queryy);
     var_dump($roww['last_id']); */
-    echo "<script> $.Notification.notify('error','bottom center','NOTIFICACIÓN', 'PRODUCTO AGREGADO A LA FACTURA CORRECTAMENTE')</script>";
+   // echo "<script> $.Notification.notify('error','bottom center','NOTIFICACIÓN', 'PRODUCTO AGREGADO A LA FACTURA CORRECTAMENTE')</script>";
         
         ?>
         

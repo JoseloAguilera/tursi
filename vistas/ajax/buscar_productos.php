@@ -34,12 +34,12 @@ if ($action == 'ajax') {
 
     }
 
-    $sWhere .= " order by id_producto desc";
+    $sWhere .= " order by codigo_producto asc";
 
     include 'pagination.php'; //include pagination file
     //pagination variables
     $page      = (isset($_REQUEST['page']) && !empty($_REQUEST['page'])) ? $_REQUEST['page'] : 1;
-    $per_page  = 10; //how much records you want to show
+    $per_page  = 20; //how much records you want to show
     $adjacents = 4; //gap between pages after number of adjacents
     $offset    = ($page - 1) * $per_page;
     //Count the total number of row in your table*/
@@ -56,7 +56,8 @@ if ($action == 'ajax') {
         $simbolo_moneda = get_row('perfil', 'moneda', 'id_perfil', 1);
         ?>
         <div class="table-responsive">
-          <table class="table table-sm table-striped">
+          <table class="table table-sm "> <!-- table-striped -->
+          <thead class="thead-default">
             <tr  class="info">
                <!--  <th>ID</th> -->
                 <th></th>
@@ -72,6 +73,8 @@ if ($action == 'ajax') {
                 <th class='text-right'>Acciones</th>
 
             </tr>
+    </thead>
+    <tbody>
             <?php
 while ($row = mysqli_fetch_array($query)) {
             $id_producto          = $row['id_producto'];
@@ -132,7 +135,7 @@ if ($image_path == null) {
                         <!--<img src="<?php echo $image_path; ?>" alt="Product Image" class='rounded-circle' width="60">-->
                     </td>
                     <td><?php echo $codigo_producto; ?></td>
-                    <td ><?php echo $nombre_producto; ?></td>
+                    <td width="50%"><?php echo $nombre_producto; ?></td>
                     <td class='text-center'><?php echo stock($stock_producto); ?></td>
                     <td><span class='pull-left'><?php echo $simbolo_moneda . ' ' . number_format($costo_producto, 0, '', '.'); ?></span></td>
                     <td><span class='pull-left'><?php echo $simbolo_moneda . ' ' . number_format($precio_producto, 0,'' ,'.') ; ?></span></td>
@@ -169,6 +172,7 @@ if ($image_path == null) {
 echo paginate($reload, $page, $total_pages, $adjacents);
         ?></span></td>
         </tr>
+</tbody>
     </table>
 </div>
 <?php

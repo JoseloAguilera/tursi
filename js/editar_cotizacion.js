@@ -24,6 +24,7 @@ function load(page) {
 function agregar(id) {
     var precio_venta = document.getElementById('precio_venta_' + id).value;
     var cantidad = document.getElementById('cantidad_' + id).value;
+    var jornada = document.getElementById('jornada_' + id).value;
     var costo = document.getElementById('precio_costo_' + id).value;
     precio_costo = parseInt(costo, 10);
   //  console.log(precio_costo);
@@ -38,6 +39,11 @@ function agregar(id) {
         document.getElementById('precio_venta_' + id).focus();
         return false;
     }
+    if (isNaN(jornada)) {
+        $.Notification.notify('error', 'bottom center', 'NOTIFICACIÓN', 'LA JORNADA NO ES UN NÚMERO, INTENTAR DE NUEVO')
+        document.getElementById('jornada_' + id).focus();
+        return false;
+    }
     /*if (precio_venta < (precio_costo+(precio_costo*0.1))) {
         $.Notification.notify('error','bottom center','NOTIFICACIÓN', 'EL PRECIO ES MUY BAJO, INTENTAR DE NUEVO')
         document.getElementById('precio_venta_' + id).focus();
@@ -47,7 +53,7 @@ function agregar(id) {
     $.ajax({
         type: "POST",
         url: "../ajax/editar_tmp_modalcot.php",
-        data: "id=" + id + "&precio_venta=" + precio_venta + "&cantidad=" + cantidad,
+        data: "id=" + id + "&precio_venta=" + precio_venta + "&cantidad=" + cantidad +"&jornada=" + jornada,
         beforeSend: function(objeto) {
             $("#resultados").html('<img src="../../img/ajax-loader.gif"> Cargando...');
         },

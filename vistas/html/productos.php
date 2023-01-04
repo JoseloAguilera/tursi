@@ -14,6 +14,8 @@ get_cadena($user_id);
 $modulo = "Productos";
 permisos($modulo, $cadena_permisos);
 //Finaliza Control de Permisos
+
+
 $count      = mysqli_query($conexion, "select MAX(codigo_producto) as codigo from productos");
 $rw         = mysqli_fetch_array($count);
 //$product_id = $rw['codigo'] + 1;
@@ -24,7 +26,57 @@ $product_id = 0+1;
 <?php require 'includes/header_start.php';?>
 
 <?php require 'includes/header_end.php';?>
+<script>
+		function upload_image(product_id){
+			$("#load_img").text('Cargando...');
+			var inputFileImage = document.getElementById("imagefile");
+			var file = inputFileImage.files[0];
+			var data = new FormData();
+			data.append('imagefile',file);
 
+
+
+			$.ajax({
+					url: "../ajax/imagen_product_ajax.php",        // Url to which the request is send
+					type: "POST",             // Type of request to be send, called as method
+					data: data, 			  // Data sent to server, a set of key/value pairs (i.e. form fields and values)
+					contentType: false,       // The content type used when sending data to the server.
+					cache: false,             // To unable request pages to be cached
+					processData:false,        // To send DOMDocument or non processed data file it is set to false
+					success: function(data)   // A function to be called if request succeeds
+					{
+						$("#load_img").html(data);
+
+					}
+				});
+
+		}
+		function upload_image_mod(id_producto){
+			$("#load_img_mod").text('Cargando...');
+			var inputFileImage = document.getElementById("imagefile_mod");
+			var file = inputFileImage.files[0];
+			var data = new FormData();
+			data.append('imagefile_mod',file);
+			data.append('id_producto',id_producto);
+
+
+
+			$.ajax({
+					url: "../ajax/imagen_product_ajax2.php",        // Url to which the request is send
+					type: "POST",             // Type of request to be send, called as method
+					data: data, 			  // Data sent to server, a set of key/value pairs (i.e. form fields and values)
+					contentType: false,       // The content type used when sending data to the server.
+					cache: false,             // To unable request pages to be cached
+					processData:false,        // To send DOMDocument or non processed data file it is set to false
+					success: function(data)   // A function to be called if request succeeds
+					{
+						$("#load_img_mod").html(data);
+
+					}
+				});
+
+		}
+	</script>
 <!-- Begin page -->
 <div id="wrapper" class="forced enlarged"> <!-- DESACTIVA EL MENU -->
 
@@ -270,57 +322,7 @@ if ($permisos_editar == 1) {
 			})
 		})
 	</script>
-	<script>
-		function upload_image(product_id){
-			$("#load_img").text('Cargando...');
-			var inputFileImage = document.getElementById("imagefile");
-			var file = inputFileImage.files[0];
-			var data = new FormData();
-			data.append('imagefile',file);
-
-
-
-			$.ajax({
-					url: "../ajax/imagen_product_ajax.php",        // Url to which the request is send
-					type: "POST",             // Type of request to be send, called as method
-					data: data, 			  // Data sent to server, a set of key/value pairs (i.e. form fields and values)
-					contentType: false,       // The content type used when sending data to the server.
-					cache: false,             // To unable request pages to be cached
-					processData:false,        // To send DOMDocument or non processed data file it is set to false
-					success: function(data)   // A function to be called if request succeeds
-					{
-						$("#load_img").html(data);
-
-					}
-				});
-
-		}
-		function upload_image_mod(id_producto){
-			$("#load_img_mod").text('Cargando...');
-			var inputFileImage = document.getElementById("imagefile_mod");
-			var file = inputFileImage.files[0];
-			var data = new FormData();
-			data.append('imagefile_mod',file);
-			data.append('id_producto',id_producto);
-
-
-
-			$.ajax({
-					url: "../ajax/imagen_product_ajax2.php",        // Url to which the request is send
-					type: "POST",             // Type of request to be send, called as method
-					data: data, 			  // Data sent to server, a set of key/value pairs (i.e. form fields and values)
-					contentType: false,       // The content type used when sending data to the server.
-					cache: false,             // To unable request pages to be cached
-					processData:false,        // To send DOMDocument or non processed data file it is set to false
-					success: function(data)   // A function to be called if request succeeds
-					{
-						$("#load_img_mod").html(data);
-
-					}
-				});
-
-		}
-	</script>
+	
 	<script>
 		function carga_img(id_producto) {
 			$(".outer_img").load("../ajax/img.php?id_producto=" + id_producto);

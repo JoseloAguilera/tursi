@@ -20,5 +20,5 @@ if ($count != 0) {
 //$buat_id = str_pad($codigo, 5, STR_PAD_LEFT);
 //$codigo  = "$buat_id";
 
-echo '<input type="text" class="form-control" autocomplete="off" id="codigo" value="' . $codigo . '" name="codigo" >';
+echo '<input type="text" class="form-control" autocomplete="off" id="codigo" value="' . $codigo . '" name="codigo" required>';
 ?>

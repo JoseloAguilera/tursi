@@ -1,37 +1,12 @@
 <?php
 include 'is_logged.php'; //Archivo verifica que el usario que intenta acceder a la URL esta logueado
 /*Inicia validacion del lado del servidor*/
-if (empty($_POST['codigo'])) {
-    $errors[] = "Código vacío";
-} else if (empty($_POST['nombre'])) {
-    $errors[] = "Nombre del producto vacío";
-} else if ($_POST['linea'] == "") {
-    $errors[] = "Selecciona una Linea del producto";
-} else if ($_POST['proveedor'] == "") {
-    $errors[] = "Selecciona un Proveedor";
-} else if (empty($_POST['costo'])) {
-    $errors[] = "Costo de Producto vacío";
-} else if (empty($_POST['precio'])) {
-    $errors[] = "Precio de venta vacío";
-} else if (empty($_POST['minimo'])) {
-    $errors[] = "Stock minimo  vacío";
-} else if ($_POST['estado'] == "") {
-    $errors[] = "Selecciona el estado del producto";
-} else if ($_POST['impuesto'] == "") {
-    $errors[] = "Selecciona el impuesto del producto";
-} else if ($_POST['inv'] == "") {
-    $errors[] = "Selecciona Maneja Inventario";
-} else if (
+
+if (
     !empty($_POST['codigo']) &&
     !empty($_POST['nombre']) &&
     $_POST['linea'] != "" &&
-    $_POST['proveedor'] != "" &&
-    $_POST['estado'] != "" &&
-    $_POST['impuesto'] != "" &&
-    $_POST['inv'] != "" &&
-    !empty($_POST['costo']) &&
-    !empty($_POST['precio']) &&
-    !empty($_POST['minimo'])
+    !empty($_POST['preciom'])
 ) {
     /* Connect To Database*/
     require_once "../db.php";
@@ -100,6 +75,20 @@ if (empty($_POST['codigo'])) {
     $sql2         = mysqli_query($conexion, "select LAST_INSERT_ID(id_producto) as last from productos order by id_producto desc limit 0,1 ");
     $rw          = mysqli_fetch_array($sql2);
     $id_producto = $rw['last'];
+    //var_dump($id_producto);
+    $sql_img    = "SELECT * FROM tmp_imagen WHERE id_producto = $id_producto";
+    //var_dump($sql_img);
+    $query_img  = mysqli_query($conexion, $sql_img);
+    $rw_img     = mysqli_fetch_array($query_img);
+    $img_dir    = $rw_img['direccion'];
+    $sql_upd_img = "UPDATE productos SET image_path='$img_dir' WHERE id_producto=$id_producto";
+    $query_upd_img = mysqli_query($conexion, $sql_upd_img);
+    if ($query_upd_img){
+
+    }else{
+        $errors[] = "Lo siento algo ha salido mal con la carga de imagen nuevamente." . mysqli_error($conexion);
+    }
+
     //GURDAMOS LAS ENTRADAS EN EL KARDEX
     $saldo_total    = $stock * $costo;
     $sql_kardex     = mysqli_query($conexion, "select * from kardex where producto_kardex='" . $id_producto . "' order by id_kardex DESC LIMIT 1");
@@ -120,12 +109,12 @@ if (empty($_POST['codigo'])) {
         $tipo           = 5;
     }
     
-
     guardar_entradas($date_added, $id_producto, $stock, $costo, $saldo_total, $cant_saldo, $costo_promedio, $saldo_full, $date_added, $users, $tipo);
 //var_dump($query_new_insert);
 //var_dump($query_update);
     if ($query_new_insert) {
         $messages[] = "Producto ha sido ingresado satisfactoriamente.";
+        //echo '<script type="text/javascript"> jsfunction(); </script>';
     } else{
         $errors[] = "Lo siento algo ha salido mal intenta nuevamente." . mysqli_error($conexion);
     }
@@ -161,3 +150,10 @@ foreach ($messages as $message) {
 }
 
 ?>
+
+<!-- <script type="text/javascript">
+   function jsfunction(){
+    $("#load_img").html(<img src="../../img/productos/default.jpg" class="thumb-img" width="200" alt="Bussines profile picture">);
+   }
+   
+</script> -->

@@ -74,7 +74,7 @@ if (isset($conexion)) {
 									<div class="col-md-6">
 										<div class="form-group">
 											<label for="mod_proveedor" class="control-label">Proveedor:</label>
-											<select class='form-control' name='mod_proveedor' id='mod_proveedor' required>
+											<select class='form-control' name='mod_proveedor' id='mod_proveedor'>
 												<option value="">-- Selecciona --</option>
 												<?php
 
@@ -131,7 +131,7 @@ if (isset($conexion)) {
 									<div class="col-md-6">
 										<div class="form-group">
 											<label for="mod_costo" class="control-label">Costo:</label>
-											<input type="text" class="form-control" id="mod_costo" name="mod_costo" autocomplete="off" pattern="^[0-9]{1,100}?$" title="Ingresa sólo números con 0 ó 2 decimales" maxlength="100" required>
+											<input type="text" class="form-control" id="mod_costo" name="mod_costo" autocomplete="off" pattern="^[0-9]{1,100}?$" title="Ingresa sólo números con 0 ó 2 decimales" maxlength="100">
 										</div>
 									</div>
 									<div class="col-md-6">
@@ -152,7 +152,7 @@ if (isset($conexion)) {
 									<div class="col-md-6">
 										<div class="form-group">
 											<label for="mod_preciom" class="control-label">Precio Alquiler:</label>
-											<input type="text" class="form-control" id="mod_preciom" name="mod_preciom" autocomplete="off" pattern="^[0-9]{1,100}?$" title="Ingresa sólo números enteros" maxlength="100">
+											<input type="text" class="form-control" id="mod_preciom" name="mod_preciom" autocomplete="off" pattern="^[0-9]{1,100}?$" title="Ingresa sólo números enteros" maxlength="100" required>
 										</div>
 									</div>
 									<!--div class="col-md-4">

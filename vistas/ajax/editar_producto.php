@@ -1,40 +1,14 @@
 <?php
 include 'is_logged.php'; //Archivo verifica que el usario que intenta acceder a la URL esta logueado
 /*Inicia validacion del lado del servidor*/
-if (empty($_POST['mod_id'])) {
-    $errors[] = "ID vacío";
-} elseif (empty($_POST['mod_codigo'])) {
-    $errors[] = "Codigo vacío";
-} else if (empty($_POST['mod_nombre'])) {
-    $errors[] = "Nombre del producto vacío";
-} else if ($_POST['mod_linea'] == "") {
-    $errors[] = "Selecciona una categoria del producto";
-} else if ($_POST['mod_proveedor'] == "") {
-    $errors[] = "Selecciona un Proveedor";
-} else if (empty($_POST['mod_costo'])) {
-    $errors[] = "Costo de Producto vacío";
-} else if (empty($_POST['mod_precio'])) {
-    $errors[] = "Precio de venta vacío";
-} else if (empty($_POST['mod_minimo'])) {
-    $errors[] = "Stock minimo vacío";
-} else if ($_POST['mod_estado'] == "") {
-    $errors[] = "Selecciona el estado del producto";
-} else if ($_POST['mod_impuesto'] == "") {
-    $errors[] = "Selecciona el impuesto del producto";
-} else if ($_POST['mod_inv'] == "") {
-    $errors[] = "Selecciona el impuesto del producto";
-} else if (
+if (
     !empty($_POST['mod_codigo']) &&
     !empty($_POST['mod_nombre']) &&
     $_POST['mod_linea'] != "" &&
-    $_POST['mod_proveedor'] != "" &&
-    //$_POST['mod_medida'] != "" &&
     $_POST['mod_inv'] != "" &&
     $_POST['mod_impuesto'] != "" &&
     $_POST['mod_estado'] != "" &&
-    !empty($_POST['mod_costo']) &&
-    !empty($_POST['mod_precio']) &&
-    !empty($_POST['mod_minimo'])
+    !empty($_POST['mod_preciom']) 
 ) {
     /* Connect To Database*/
     require_once "../db.php";
@@ -44,7 +18,12 @@ if (empty($_POST['mod_id'])) {
     $nombre      = mysqli_real_escape_string($conexion, (strip_tags($_POST["mod_nombre"], ENT_QUOTES)));
     $descripcion = mysqli_real_escape_string($conexion, (strip_tags($_POST["mod_descripcion"], ENT_QUOTES)));
     $linea       = intval($_POST['mod_linea']);
-    $proveedor   = intval($_POST['mod_proveedor']);
+    if(isset($_POST['mod_proveedor'])){
+        $proveedor   = intval($_POST['mod_proveedor']);
+    }else{
+        $proveedor = "";
+    }
+    
     //$medida          = intval($_POST['mod_medida']);
     $inv      = intval($_POST['mod_inv']);
     $impuesto = intval($_POST['mod_impuesto']);

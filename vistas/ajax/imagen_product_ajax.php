@@ -5,8 +5,8 @@ include "is_logged.php"; //Archivo comprueba si el usuario esta logueado
 require_once "../db.php";
 require_once "../php_conexion.php";
 require_once "../funciones.php";
-$query_id = mysqli_query($conexion, "SELECT RIGHT(codigo_producto,6) as product_id FROM productos
-  ORDER BY codigo_producto DESC LIMIT 1")
+$query_id = mysqli_query($conexion, "SELECT RIGHT(id_producto,6) as product_id FROM productos
+  ORDER BY id_producto DESC LIMIT 1")
 or die('error ' . mysqli_error($conexion));
 $count = mysqli_num_rows($query_id);
 if ($count != 0) {
@@ -14,10 +14,11 @@ if ($count != 0) {
     $product_id = $data_id['product_id'] + 1;
 } else {
     $product_id = 1;
+
 }
 
-$buat_id    = str_pad($product_id, 5, STR_PAD_LEFT);
-$product_id = "$buat_id";
+/* $buat_id    = str_pad($product_id, 5, STR_PAD_LEFT);
+$product_id = "$buat_id"; */
 //$product_id    = intval($_REQUEST['product_id']);
 //$product_id    = mysqli_real_escape_string($conexion, (strip_tags($_REQUEST["product_id"], ENT_QUOTES)));
 $target_dir    = "../../img/productos/";
@@ -41,7 +42,8 @@ if (($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jp
     if ($imageFileZise > 0) {
         move_uploaded_file($_FILES["imagefile"]["tmp_name"], $target_file);
         $imagen     = basename($_FILES["imagefile"]["name"]);
-        $img_update = "image_path='../../img/productos/$image_name' ";
+        //$img_update = "image_path='../../img/productos/$image_name' ";
+        $img_update = "'../../img/productos/$image_name' ";
 
     } else { $img_update = "";}
 
@@ -54,11 +56,15 @@ if (($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jp
         $sql              = "UPDATE productos SET $img_update WHERE codigo_producto='$product_id';";
         $query_new_insert = mysqli_query($conexion, $sql);
     } else {
-        $sql_pro              = "INSERT INTO productos (codigo_producto, date_added) VALUES ('$product_id','$date_added')";
+        /* $sql_pro              = "INSERT INTO productos (codigo_producto, date_added) VALUES ('$product_id','$date_added')";
         $query_new_insert_pro = mysqli_query($conexion, $sql_pro);
 
         $sql              = "UPDATE productos SET $img_update WHERE codigo_producto='$product_id';";
         $query_new_insert = mysqli_query($conexion, $sql);
+ */
+        $sql_pro              = "INSERT INTO tmp_imagen (direccion, id_producto) VALUES ($img_update,'$product_id')";
+        //var_dump($sql_pro);
+        $query_new_insert = mysqli_query($conexion, $sql_pro);
     }
     if ($query_new_insert) {
         ?>
