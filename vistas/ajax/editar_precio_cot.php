@@ -13,7 +13,7 @@ if (empty($_POST['id_tmp'])) {
     $id_tmp = intval($_POST['id_tmp']);
     $precio = floatval($_POST['precio']);
 
-    $sql          = "UPDATE tmp_cotizacion SET  precio_tmp='" . $precio . "' WHERE id_tmp='" . $id_tmp . "'";
+    $sql          = "UPDATE tmp_cotizacion SET precio_tmp='" . $precio . "' WHERE id_tmp='" . $id_tmp . "'";
     $query_update = mysqli_query($conexion, $sql);
 } else {
     $errors[] = "Error desconocido.";

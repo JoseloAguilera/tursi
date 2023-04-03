@@ -1,5 +1,4 @@
 <?php
-
 include 'is_logged.php'; //Archivo verifica que el usario que intenta acceder a la URL esta logueado
 $session_id = session_id();
 $id_factura = $_SESSION['id_version'];
@@ -24,44 +23,29 @@ if (!empty($id) and !empty($cantidad) and !empty($jornada)  ) {
     $stock = $rw['stock_producto'];
     $inv   = $rw['inv_producto'];
 
-    //Comprobamos si ya agregamos un producto a la tabla tmp_compra
-    $comprobar = mysqli_query($conexion, "select * from detalle_fact_cot where id_producto='" . $id_producto . "' and id_factura='" . $id_factura . "'");
+    //Comprobamos si ya agregamos un producto a la tabla detalle_fact_cot
+    $comprobar = mysqli_query($conexion, "select * from detalle_fact_cot where id_producto='" . $id_producto . "' and id_version='" . $id_factura . "'");
 
     if ($row = mysqli_fetch_array($comprobar)) {
         $cant = $row['cantidad'] + $cantidad;
-        // condicion si el stock e menor que la cantidad requerida
-        if ($cant > $stock and $inv == 0) {
-            echo "<script>swal('LA CANTIDAD SUPERA AL STOCK!', 'INTENTAR NUEVAMENTE', 'error')
-                                $('#resultados').load('../ajax/editar_tmp_cot.php');
-            </script>";
-        } else {
-
-            $sql          = "UPDATE detalle_fact_cot SET cantidad='" . $cant . "' WHERE id_producto='" . $id_producto . "' and id_factura='" . $id_factura . "'";
-            $query_update = mysqli_query($conexion, $sql);
-            echo "<script> $.Notification.notify('warning','bottom center','NOTIFICACIÓN', 'PRODUCTO AGREGADO A LA DATA')</script>";
-        }
-        // fin codicion cantaidad
-
+        $jor          = $row['jornada_tmp'] + $jornada;
+        $sql          = "UPDATE detalle_fact_cot SET cantidad='" . $cant . "', jornada='" . $jor . "' WHERE id_producto='" . $id_producto . "' and id_version='" . $id_factura . "'";
+        $query_update = mysqli_query($conexion, $sql);
+        echo "<script> $.Notification.notify('warning','bottom center','NOTIFICACIÓN', 'CANTIDAD AGREGADA AL PRESUPUESTO')</script>";
+    
     } else {
-        // condicion si el stock e menor que la cantidad requerida
-        if ($cantidad > $stock and $inv == 0) {
-            echo "<script>swal('LA CANTIDAD SUPERA AL STOCK!', 'INTENTAR NUEVAMENTE', 'error')
-                    $('#resultados').load('../ajax/editar_tmp_cot.php');
-            </script>";
-        } else {
-
-            $insert_tmp = mysqli_query($conexion, "INSERT INTO detalle_fact_cot (id_factura,numero_factura, id_producto,cantidad,precio_venta) VALUES ('$id_factura','$numero_factura','$id_producto','$cantidad','$precio_venta')");
-            echo "<script> $.Notification.notify('warning','bottom center','NOTIFICACIÓN', 'PRODUCTO AGREGADO A LA DATA')</script>";
+            $insert_tmp = mysqli_query($conexion, "INSERT INTO detalle_fact_cot (id_version,id_producto,cantidad,jornada,precio_venta) VALUES ('$id_factura','$id_producto','$cantidad','1','$precio_venta')");
+            echo "<script> $.Notification.notify('warning','bottom center','NOTIFICACIÓN', 'PRODUCTO AGREGADO AL PRESUPUESTO')</script>";
         }
         // fin codicion cantaidad
     }
 
-}
+
 if (isset($_GET['id'])) //codigo elimina un elemento del array
 {
     $id_detalle = intval($_GET['id']);
     $id_prod    = get_row('detalle_fact_cot', 'id_producto', 'id_detalle', $id_detalle);
-    $quantity   = get_row('detalle_fact_cot', 'cantidad', 'id_detalle', $id_detalle);
+    //$quantity   = get_row('detalle_fact_cot', 'cantidad', 'id_detalle', $id_detalle);
     $delete     = mysqli_query($conexion, "DELETE FROM detalle_fact_cot WHERE id_detalle='" . $id_detalle . "'");
 }
 $simbolo_moneda = get_row('perfil', 'moneda', 'id_perfil', 1);
@@ -94,7 +78,9 @@ $total_impuesto10 = 0;
 $sub_0=0;
 $sub_5=0;
 $sub_10=0;
+$subtotal=0;
 $sql            = mysqli_query($conexion, "select * from productos, facturas_cot, detalle_fact_cot where facturas_cot.id_version=detalle_fact_cot.id_version and  facturas_cot.id_version='$id_factura' and productos.id_producto=detalle_fact_cot.id_producto");
+//var_dump($id_factura);
 while ($row = mysqli_fetch_array($sql)) {
     $id_detalle      = $row["id_detalle"];
     $id_producto     = $row["id_producto"];
@@ -116,46 +102,44 @@ while ($row = mysqli_fetch_array($sql)) {
     $subtotal = $sumador_total;
     if ($row['iva_producto'] == 10) {
         //$total_iva = iva($precio_venta);
-        $sub_10 += $precio_venta;
-        $total_iva10 = $precio_venta/11;
-        $total_impuesto10 += (rebajas($total_iva10, $desc_tmp) * $cantidad);
+        $sub_10 += $final_items;
+        $total_iva10 = $precio_total/11;
+        $total_impuesto10 += (rebajas($total_iva10, $desc_tmp));
     } elseif ($row['iva_producto'] == 5) {
-        $sub_5 += $precio_venta;
-        $total_iva5 = $precio_venta/21;
-        $total_impuesto5 += (rebajas($total_iva5, $desc_tmp) * $cantidad);
+        $sub_5 += $final_items;
+        $total_iva5 = $precio_total/21;
+        $total_impuesto5 += (rebajas($total_iva5, $desc_tmp));
     }else {
-        $sub_0 += $precio_venta;
-        $total_iva0 = $precio_venta;
-        $total_impuesto0 += (rebajas($total_iva0, $desc_tmp) * $cantidad);
+        $sub_0 += $final_items;
+        $total_iva0 = $precio_total;
+        $total_impuesto0 += (rebajas($total_iva0, $desc_tmp));
     }
+//var_dump($sumador_total);
     ?>
     <tr>
         <td class='text-center' width="7%"><?php echo $codigo_producto; ?></td>
         <td class='text-center' width="7%"><?php echo $cantidad; ?></td>
         <td align="right" width="7%">
-            <input type="text" class="form-control txt_jor" style="text-align:center" value="<?php echo $jornada; ?>" id="<?php echo "jornada_".$id_detalle; ?>">
+            <input type="text" class="form-control txt_jor" style="text-align:center" value="<?php echo $jornada; ?>" id="<?php echo $id_detalle; ?>">
         </td>
         <td><?php echo $nombre_producto; ?></td>
-        <td align="right" width="15%">
-            <input type="text" class="form-control txt_precio" style="text-align:center" value="<?php echo $precio_venta; ?>" id="<?php echo  "precio_".$id_detalle; ?>">
-        </td>
-        <!-- <td class='text-center'>
+        <td class='text-center'>
             <div class="input-group">
-                <select id="<?php //echo $id_detalle; ?>" class="form-control employee_id">
+                <select id="<?php echo $id_detalle; ?>" class="form-control employee_id">
                     <?php
-//$sql1 = mysqli_query($conexion, "select * from productos where id_producto='" . $id_producto . "'");
-   // while ($rw1 = mysqli_fetch_array($sql1)) {
+$sql1 = mysqli_query($conexion, "select * from productos where id_producto='" . $id_producto . "'");
+    while ($rw1 = mysqli_fetch_array($sql1)) {
         ?>
-                        <option selected disabled value="<?php //echo $precio_venta ?>"><?php// echo number_format($precio_venta, 0, '', ''); ?></option>
-                        <option value="<?php //echo $rw1['valor_venta'] ?>">PV <?php //echo number_format($rw1['valor_venta'], 0, '', ''); ?></option>
-                        <option value="<?php //echo $rw1['valor_alquiler'] ?>">PM <?php //echo number_format($rw1['valor_alquiler'], 0, '', ''); ?></option>
-                        <option value="<?php //echo $rw1['valor3_producto'] ?>">PE <?php //echo number_format($rw1['valor3_producto'], 0, '', ''); ?></option>
+                        <option selected disabled value="<?php echo $precio_venta ?>"><?php echo number_format($precio_venta, 0, '', ''); ?></option>
+                        <!-- <option value="<?php echo $rw1['valor_venta'] ?>">PV <?php echo number_format($rw1['valor_venta'], 0, '', ''); ?></option> -->
+                        <option value="<?php echo $rw1['valor_alquiler'] ?>">PM <?php echo number_format($rw1['valor_alquiler'], 0, '', ''); ?></option>
+                        <!-- <option value="<?php echo $rw1['valor3_producto'] ?>">PE <?php echo number_format($rw1['valor3_producto'], 0, '', ''); ?></option> -->
                         <?php
-//}
+}
     ?>
                 </select>
             </div>
-        </td> -->
+        </td> 
         <td align="right" width="10%">
             <input type="text" class="form-control txt_desc" style="text-align:center" value="<?php echo $desc_tmp; ?>" id="<?php echo $id_detalle; ?>">
         </td>
@@ -225,6 +209,7 @@ permisos($modulo, $cadena_permisos);
 //var_dump($permisos_eliminar);
 ?>
 <input type="hidden" id="permiso" value="<?php echo $permisos_eliminar; ?>">
+
 <script>
     $(document).ready(function () {
         permiso = document.getElementById('permiso').value;
@@ -232,7 +217,7 @@ permisos($modulo, $cadena_permisos);
         $('.txt_desc').on('blur',function(event){
             var keycode = (event.keyCode ? event.keyCode : event.which);
         // if(keycode == '13'){
-            id_tmp = $(this).attr("id");
+            id_detalle = $(this).attr("id");
             desc = $(this).val();
              //Inicia validacion
              
@@ -264,13 +249,13 @@ permisos($modulo, $cadena_permisos);
         // }
     });
 
-        $(".txt_precio").on("blur", function(event) {
-        id_detalle = $(this).attr("id");
+    $(".employee_id").on("change", function(event) {
+         id_tmp = $(this).attr("id");
         precio = $(this).val();
         $.ajax({
             type: "POST",
             url: "../ajax/editar_precio_cot2.php",
-            data: "id_detalle=" + id_detalle + "&precio=" + precio,
+            data: "id_detalle=" + id_tmp + "&precio=" + precio,
             success: function(datos) {
                $("#resultados").load("../ajax/editar_tmp_cot.php");
                $.Notification.notify('success','bottom center','EXITO!', 'PRECIO ACTUALIZADO CORRECTAMENTE')
@@ -280,4 +265,3 @@ permisos($modulo, $cadena_permisos);
 
     });
 </script>
-

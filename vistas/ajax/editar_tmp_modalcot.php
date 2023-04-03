@@ -5,8 +5,8 @@ $id_factura     = $_SESSION['id_factura'];
 $numero_factura = $_SESSION['numero_factura'];
 if (isset($_POST['id'])) {$id = intval($_POST['id']);}
 if (isset($_POST['cantidad'])) {$cantidad = intval($_POST['cantidad']);}
-if (isset($_POST['jornada'])) {$jornada = $_POST['jornada'];}
 if (isset($_POST['precio_venta'])) {$precio_venta = floatval($_POST['precio_venta']);}
+$jornada = 1;
 
 /* Connect To Database*/
 require_once "../db.php"; //Contiene las variables de configuracion para conectar a la base de datos
@@ -25,21 +25,24 @@ if (!empty($id) and !empty($cantidad) and !empty($precio_venta)) {
     if ($row = mysqli_fetch_array($comprobar)) {
         $cant = $row['cantidad'] + $cantidad;
         // condicion si el stock e menor que la cantidad requerida
-        if ($cant > $stock and $inv == 0) {
+        /* if ($cant > $stock and $inv == 0) {
             echo "<script>swal('LA CANTIDAD SUPERA AL STOCK!', 'INTENTAR NUEVAMENTE', 'error')</script>";
-        } else {
+        } else { */
             $sql          = "UPDATE detalle_fact_cot SET cantidad='" . $cant . "' WHERE id_producto='" . $id . "' and id_factura='" . $id_factura . "'";
             $query_update = mysqli_query($conexion, $sql);
-        }
+            echo "<script> $.Notification.notify('success','bottom center','NOTIFICACIÓN', 'PRODUCTO AGREGADO A LA FACTURA CORRECTAMENTE')</script>";
+        /* } */
         // fin codicion cantidad
 
     } else {
 // condicion si el stock e menor que la cantidad requerida
-        if ($cantidad > $stock and $inv == 0) {
+       /*  if ($cantidad > $stock and $inv == 0) {
             echo "<script>swal('LA CANTIDAD SUPERA AL STOCK!', 'INTENTAR NUEVAMENTE', 'error')</script>";
-        } else {
-            $insert_tmp = mysqli_query($conexion, "INSERT INTO detalle_fact_cot (id_factura,numero_factura, id_producto,cantidad,precio_venta) VALUES ('$id_factura','$numero_factura','$id','$cantidad','$precio_venta')");
-        }
+        } else { */
+
+            $insert_tmp = mysqli_query($conexion, "INSERT INTO tmp_cotizacion (id_producto,cantidad_tmp,jornada_tmp,precio_tmp,desc_tmp,session_id) VALUES ('$id','$cantidad','1','$precio_venta','0','$session_id')");
+            echo "<script> $.Notification.notify('success','bottom center','NOTIFICACIÓN', 'PRODUCTO AGREGADO A LA FACTURA CORRECTAMENTE')</script>";
+        /* } */
         // fin codicion cantaidad
     }
 
@@ -49,7 +52,7 @@ if (isset($_GET['id'])) //codigo elimina un elemento del array
     $id_detalle = intval($_GET['id']);
     $id_prod    = get_row('detalle_fact_cot', 'id_producto', 'id_detalle', $id_detalle);
     $quantity   = get_row('detalle_fact_cot', 'cantidad', 'id_detalle', $id_detalle);
-    $update     = agregar_stock($id_prod, $quantity); //Vuelve agregar al inventario
+   // $update     = agregar_stock($id_prod, $quantity); //Vuelve agregar al inventario
     $delete     = mysqli_query($conexion, "DELETE FROM detalle_fact_cot WHERE id_detalle='" . $id_detalle . "'");
 }
 $simbolo_moneda = get_row('perfil', 'moneda', 'id_perfil', 1);
@@ -60,6 +63,7 @@ $simbolo_moneda = get_row('perfil', 'moneda', 'id_perfil', 1);
             <tr>
                 <th class='text-center'>COD</th>
                 <th class='text-center'>CANT.</th>
+                <th class='text-center'>JOR.</th>
                 <th class='text-center'>DESCRIP.</th>
                 <th class='text-center'>PRECIO <?php echo $simbolo_moneda; ?></th>
                 <th class='text-center'>DESC %</th>
@@ -87,18 +91,20 @@ while ($row = mysqli_fetch_array($sql)) {
     $id_producto     = $row["id_producto"];
     $codigo_producto = $row['codigo_producto'];
     $cantidad        = $row['cantidad'];
+    $jornada         = $row['jornada_tmp'];
     $desc_tmp        = $row['desc_venta'];
     $nombre_producto = $row['nombre_producto'];
 
     $precio_venta   = $row['precio_venta'];
     $precio_venta_f = number_format($precio_venta, 0, '', ''); //Formateo variables
     //$precio_venta_r = str_replace(",", "", $precio_venta_f); //Reemplazo las comas
-    $precio_total   = $precio_venta * $cantidad;
+    $precio_total   = $precio_venta * $cantidad * $jornada;
     $final_items    = rebajas($precio_total, $desc_tmp); //Aplicando el descuento
     /*--------------------------------------------------------------------------------*/
     $precio_total_f = number_format($final_items, 0, '', ''); //Precio total formateado
     //$precio_total_r = str_replace(",", "", $precio_total_f); //Reemplazo las comas
     $sumador_total += $final_items; //Sumador
+    
     $subtotal = $sumador_total; 
     if ($row['iva_producto'] == 10) {
         //$total_iva = iva($precio_venta);

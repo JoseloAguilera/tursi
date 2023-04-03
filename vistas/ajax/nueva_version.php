@@ -39,7 +39,7 @@ if ($action == 'ajax') {
                 "0, " .
                 $row3['id_cliente'].  
                 ")";
-    //echo $row1['id_version'];
+    echo $row1['id_version'];
     $sql2 = "SELECT * FROM detalle_fact_cot WHERE id_version = ".$row1['id_version'];
     $query2 = mysqli_query($conexion, $sql2);
     //$row2 = mysqli_fetch_array($query2);
@@ -47,12 +47,12 @@ if ($action == 'ajax') {
     $query4 = mysqli_query($conexion, $sql4);
     //var_dump($sql4);
     if ($query4){
-        $sql5 = mysqli_query($conexion, "SELECT LAST_INSERT_ID(id_detalle) AS last_id FROM detalle_fact_cot order by id_detalle desc limit 0,1 ;");
-        $row5 = mysqli_fetch_array($sql5);
+        /* $sql5 = mysqli_query($conexion, "SELECT LAST_INSERT_ID(id_version) AS last_id FROM facturas_cot order by id_detalle desc limit 0,1 ;");
+        $row5 = mysqli_fetch_array($sql5); */
         $sql6 = "INSERT INTO detalle_fact_cot (`id_version`, `id_producto`, `cantidad`, `jornada`, `desc_venta`, `precio_venta`) VALUES ";
                 while($row2 = mysqli_fetch_array($query2)){
                     $sql6 .=" (".
-                $row5['last_id'].", ".
+                ($row1['id_version']+1).", ".
                 $row2['id_producto'].", ". 
                 $row2['cantidad'].", ".
                 $row2['jornada'].", ".
@@ -60,6 +60,7 @@ if ($action == 'ajax') {
                 $row2['precio_venta']. "),";
         }
         $sql6 = substr_replace($sql6, ";", -1);
+        var_dump($sql6);
         $query6 = mysqli_query($conexion, $sql6);
          //$row6 = mysqli_fetch_array($query6);
         if($query6){

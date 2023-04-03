@@ -94,22 +94,22 @@ while ($row = mysqli_fetch_array($sql)) {
     $subtotal = $sumador_total;
     if ($row['iva_producto'] == 10) {
         //$total_iva = iva($precio_venta);
-        $sub_10 += $precio_total;
+        $sub_10 += $final_items;
         $total_iva10 = $precio_total/11;
-        $total_impuesto10 += (rebajas($total_iva10, $desc_tmp) * $cantidad);
+        $total_impuesto10 += (rebajas($total_iva10, $desc_tmp));
     } elseif ($row['iva_producto'] == 5) {
-        $sub_5 += $precio_total;
+        $sub_5 += $final_items;
         $total_iva5 = $precio_total/21;
-        $total_impuesto5 += (rebajas($total_iva5, $desc_tmp) * $cantidad);
+        $total_impuesto5 += (rebajas($total_iva5, $desc_tmp));
     }else {
-        $sub_0 += $precio_total;
+        $sub_0 += $final_items;
         $total_iva0 = $precio_total;
-        $total_impuesto0 += (rebajas($total_iva0, $desc_tmp) * $cantidad);
+        $total_impuesto0 += (rebajas($total_iva0, $desc_tmp));
     }
     
     ?>
     <tr>
-        <td class='text-center'><?php echo $codigo_producto; ?></td>
+        <td class='text-center' ><?php echo $codigo_producto; ?></td>
         <td class='text-center'><?php echo $cantidad; ?></td>
         <td align="right" width="7%">
                 <input type="text" class="form-control txt_jor" style="text-align:center" value="<?php echo $jornada; ?>" id="<?php echo $id_tmp; ?>">
@@ -123,9 +123,9 @@ $sql1 = mysqli_query($conexion, "select * from productos where id_producto='" . 
     while ($rw1 = mysqli_fetch_array($sql1)) {
         ?>
                         <option selected disabled value="<?php echo $precio_venta ?>"><?php echo number_format($precio_venta, 0,'','.'); ?></option>
-                        <option value="<?php echo $rw1['valor_venta'] ?>">PV <?php echo number_format($rw1['valor_venta'], 0,'','.'); ?></option>
+                        <!-- <option value="<?php echo $rw1['valor_venta'] ?>">PV <?php echo number_format($rw1['valor_venta'], 0,'','.'); ?></option> -->
                         <option value="<?php echo $rw1['valor_alquiler'] ?>">PM <?php echo number_format($rw1['valor_alquiler'], 0,'','.'); ?></option>
-                        <option value="<?php echo $rw1['valor3_producto'] ?>">PE <?php echo number_format($rw1['valor3_producto'], 0,'','.'); ?></option>
+                        <!-- <option value="<?php echo $rw1['valor3_producto'] ?>">PE <?php echo number_format($rw1['valor3_producto'], 0,'','.'); ?></option> -->
                         <?php
 }
     ?>
@@ -230,7 +230,7 @@ permisos($modulo, $cadena_permisos);
         data: "id_tmp=" + id_tmp + "&desc=" + desc,
         success: function(datos) {
          $("#resultados").load("../ajax/agregar_tmp_cot.php");
-         $.Notification.notify('success','bottom center','EXITO!', 'DESCUENTO dahsidhasiudhaisudhasiudhsaiuhgdCTAMENTE')
+         $.Notification.notify('success','bottom center','EXITO!', 'DESCUENTO ACTUALIZADO CORRECTAMENTE')
      }
  });
         // }
@@ -279,13 +279,13 @@ permisos($modulo, $cadena_permisos);
         data: "id_tmp=" + id_tmp + "&jorn=" + jorn,
         success: function(datos) {
            $("#resultados").load("../ajax/agregar_tmp_cot.php");
-           $.Notification.notify('success','bottom center','EXITO!', 'JORNADA ACTUALIZADO CORRECTAMENTE')
+           $.Notification.notify('success','bottom center','EXITO!', 'JORNADA ACTUALIZADA CORRECTAMENTE')
        }
    });
         // }
     });
      $(".employee_id").on("change", function(event) {
-         id_tmp = $(this).attr("id");
+        id_tmp = $(this).attr("id");
         precio = $(this).val();
         $.ajax({
             type: "POST",

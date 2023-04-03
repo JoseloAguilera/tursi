@@ -35,7 +35,7 @@ if (empty($_POST['id_cliente'])) {
     if(($_POST['fecha_reserva'] == "") || ($_POST['fecha_reserva']== '0000-00-00')){
         $fecha_reserva = null;
     }else{
-        $fecha_reserva = "'".$_POST['fecha_reserva']."'";
+        $fecha_reserva = $_POST['fecha_reserva'];
     }
    /*  var_dump($_POST['fecha_reserva']);
     var_dump($fecha_reserva);   */ 
@@ -45,10 +45,26 @@ if (empty($_POST['id_cliente'])) {
     } else {
         $estado = 1;
     }
-    $pie1 = $_POST['pie1'];
-    $pie2 = $_POST['pie2'];
-    $pie3 = $_POST['pie3'];
-    $obs  = $_POST['obs'];
+    if (isset($_POST['pie1'])){
+        $pie1 = $_POST['pie1'];
+    }else{
+        $pie1 = null;
+    }
+    if (isset($_POST['pie2'])){
+        $pie2 = $_POST['pie2'];
+    }else{
+        $pie2 = null;
+    }
+    if (isset($_POST['pie3'])){
+        $pie3 = $_POST['pie3'];
+    }else{
+        $pie3 = null;
+    }
+    if (isset($_POST['obs'])){
+        $obs = $_POST['obs'];
+    }else{
+        $obs = null;
+    }
 
     $insert_cotizacion = mysqli_query($conexion, "INSERT INTO cotizaciones VALUES (NULL,'$numero_factura','$id_cliente','$id_vendedor')");
     $sql        = mysqli_query($conexion, "select LAST_INSERT_ID(id_presupuesto) as last from cotizaciones order by last desc limit 0,1 ");

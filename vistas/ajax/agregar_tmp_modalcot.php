@@ -10,7 +10,7 @@ require_once "../funciones.php";
 if (isset($_POST['id'])) {$id = $_POST['id'];}
 if (isset($_POST['cantidad'])) {$cantidad = $_POST['cantidad'];}
 if (isset($_POST['precio_venta'])) {$precio_venta = $_POST['precio_venta'];}
-
+$jornada = 1;
 
 if (!empty($id) and !empty($cantidad) and !empty($precio_venta)) {
     // consulta para comparar el stock con la cantidad resibida
@@ -23,9 +23,9 @@ if (!empty($id) and !empty($cantidad) and !empty($precio_venta)) {
     $comprobar = mysqli_query($conexion, "select * from tmp_cotizacion, productos where productos.id_producto = tmp_cotizacion.id_producto and tmp_cotizacion.id_producto='" . $id . "' and tmp_cotizacion.session_id='" . $session_id . "'");
     if ($row = mysqli_fetch_array($comprobar)) {
         $cant = $row['cantidad_tmp'] + $cantidad;
-        $jor = $row['jornada_tmp'];
+       
 // condicion si el stock e menor que la cantidad requerida
-        $sql          = "UPDATE tmp_cotizacion SET cantidad_tmp='" . $cant . "', jornada_tmp='" . $jor . "',precio_tmp='" . $precio_venta . "' WHERE id_producto='" . $id . "' and session_id='" . $session_id . "'";
+        $sql          = "UPDATE tmp_cotizacion SET cantidad_tmp='" . $cant . "', jornada_tmp='1',precio_tmp='" . $precio_venta . "' WHERE id_producto='" . $id . "' and session_id='" . $session_id . "'";
         $query_update = mysqli_query($conexion, $sql);
         echo "<script> $.Notification.notify('success','bottom center','NOTIFICACIÓN', 'PRODUCTO AGREGADO A LA FACTURA CORRECTAMENTE')</script>";
     } else {
@@ -89,22 +89,23 @@ while ($row = mysqli_fetch_array($sql)) {
     /*--------------------------------------------------------------------------------*/
     $precio_total_f = number_format($final_items, 0, '', '.'); //Precio total formateado
     //$precio_total_r = str_replace(",", "", $precio_total_f); //Reemplazo las comas
+   
+    //$final_items = rebajas($precio_total, $desc_tmp); //Aplicando el descuento
     $sumador_total += $final_items; //Sumador
-    $final_items = rebajas($precio_total, $desc_tmp); //Aplicando el descuento
     $subtotal    = $sumador_total;
     if ($row['iva_producto'] == 10) {
         //$total_iva = iva($precio_venta);
-        $sub_10 += $precio_total;
+        $sub_10 += $final_items;
         $total_iva10 = $precio_total/11;
-        $total_impuesto10 += (rebajas($total_iva10, $desc_tmp) * $cantidad);
+        $total_impuesto10 += (rebajas($total_iva10, $desc_tmp));
     } elseif ($row['iva_producto'] == 5) {
-        $sub_5 += $precio_total;
+        $sub_5 += $final_items;
         $total_iva5 = $precio_total/21;
-        $total_impuesto5 += (rebajas($total_iva5, $desc_tmp) * $cantidad);
+        $total_impuesto5 += (rebajas($total_iva5, $desc_tmp));
     }else {
-        $sub_0 += $precio_total;
+        $sub_0 += $final_items;
         $total_iva0 = $precio_total;
-        $total_impuesto0 += (rebajas($total_iva0, $desc_tmp) * $cantidad);
+        $total_impuesto0 += (rebajas($total_iva0, $desc_tmp));
     }
     ?>
     <tr>
@@ -123,9 +124,9 @@ $sql1 = mysqli_query($conexion, "select * from productos where id_producto='" . 
     while ($rw1 = mysqli_fetch_array($sql1)) {
         ?>
                         <option selected disabled value="<?php echo $precio_venta ?>"><?php echo number_format($precio_venta, 0, '', '.'); ?></option>
-                        <option value="<?php echo $rw1['valor_venta'] ?>">PV <?php echo number_format($rw1['valor_venta'], 0, '', '.'); ?></option>
+                        <!-- <option value="<?php echo $rw1['valor_venta'] ?>">PV <?php echo number_format($rw1['valor_venta'], 0, '', '.'); ?></option> -->
                         <option value="<?php echo $rw1['valor_alquiler'] ?>">PM <?php echo number_format($rw1['valor_alquiler'], 0, '', '.'); ?></option>
-                        <option value="<?php echo $rw1['valor3_producto'] ?>">PE <?php echo number_format($rw1['valor3_producto'], 0, '', '.'); ?></option>
+                        <!-- <option value="<?php echo $rw1['valor3_producto'] ?>">PE <?php echo number_format($rw1['valor3_producto'], 0, '', '.'); ?></option> -->
                         <?php
 }
     ?>

@@ -40,7 +40,7 @@ if (isset($_GET['id_version'])) {
 		$version					= $rw_factura['version'];
 		$pie1						= $rw_factura['pie1'];
 		$pie2						= $rw_factura['pie2'];
-		$pie2						= $rw_factura['pie3'];
+		$pie3						= $rw_factura['pie3'];
 		$obs						= $rw_factura['obs'];
         $numero_presupuesto         = $rw_factura['numero_presupuesto'];	
         $_SESSION['id_version']     = $id_version;
@@ -201,6 +201,36 @@ include "../modal/buscar_productos_ventas.php";
 																		<option value="4" <?php if ($validez == 4) {echo "selected";}?>>30 días</option>
 																		<option value="5" <?php if ($validez == 5) {echo "selected";}?>>60 días</option>
 																	</select>
+																</div>
+															</div>
+														</div>
+														<div class="row">
+															<div class="col-md-12">
+																<div class="form-check">
+																	<input class="form-check-input" type="checkbox" value="En caso de modificar la/s fecha/s estarán sujetas según disponibilidad de TURSI PRODUCCIONES." id="pie1" name="pie1" <?php if ($pie1 != null) {echo "checked";}?>>
+																	<label class="form-check-label" for="pie1">
+																		En caso de modificar la/s fecha/s estarán sujetas según <br> disponibilidad de TURSI PRODUCCIONES.
+																	</label>
+																</div>
+																<div class="form-check">
+																	<input class="form-check-input" type="checkbox" value="Las horas extras inician a partir de contados 16 (dieciséis) minutos de retraso desde la hora de devolución pactada, y así sucesivamente." id="pie2" name="pie2" <?php if ($pie2 != null) {echo "checked";}?>>
+																	<label class="form-check-label" for="pie2">
+																	Las horas extras inician a partir de contados 16 (dieciséis) minutos de retraso desde la hora de devolución pactada, y así sucesivamente.
+																	</label>
+																</div>
+																<div class="form-check">
+																	<input class="form-check-input" type="checkbox" value="LOS EQUIPOS NO CUENTAN CON SEGURO Y EL CLIENTE SE HACE RESPONSABLE POR DAÑOS Y/O EXTRAVIOS." id="pie3" name="pie3" <?php if ($pie3 != null) {echo "checked";}?>>
+																	<label class="form-check-label" for="pie3">
+																	LOS EQUIPOS NO CUENTAN CON SEGURO Y EL CLIENTE SE HACE RESPONSABLE POR DAÑOS Y/O EXTRAVIOS.
+																	</label>
+																</div>
+															</div>
+														</div>
+														<div class="row">
+															<div class="col-md-12">
+																<div class="form-group">
+																	<label for="obs">Observaciones</label>
+																	<input type="textarea" name="obs" id="obs" value="<?php echo $obs?>">	
 																</div>
 															</div>
 														</div>

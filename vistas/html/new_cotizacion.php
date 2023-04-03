@@ -323,8 +323,8 @@ function printFactura(id_factura) {
 			},
 			dataType: 'text',
 			success: function(response) {
-				var mywindow = window.open('', 'Stock Management System', 'height=400,width=600');
-				mywindow.document.write('<html><head><title>Facturación</title>');
+				var mywindow = window.open('', 'Presupuesto', 'height=400,width=600');
+				mywindow.document.write('<html><head><title>Presupuesto</title>');
 				mywindow.document.write('</head><body>');
 				mywindow.document.write(response);
 				mywindow.document.write('</body></html>');
