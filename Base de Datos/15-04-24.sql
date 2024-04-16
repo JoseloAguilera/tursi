@@ -77,7 +77,7 @@ CREATE TABLE IF NOT EXISTS `comprobantes` (
   PRIMARY KEY (`id_comp`)
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 
--- Volcando datos para la tabla bd_tursi.comprobantes: ~0 rows (aproximadamente)
+-- Volcando datos para la tabla bd_tursi.comprobantes: ~1 rows (aproximadamente)
 INSERT INTO `comprobantes` (`id_comp`, `nombre_comp`, `serie_comp`, `desde_comp`, `hasta_comp`, `long_comp`, `actual_comp`, `vencimiento_comp`, `estado_comp`) VALUES
 	(3, 'PRUEBA', '001-001-', 0, 99999999, 15, 0, '2022-10-19', 1);
 
@@ -549,7 +549,7 @@ CREATE TABLE IF NOT EXISTS `facturas_cot` (
   PRIMARY KEY (`id_version`) USING BTREE
 ) ENGINE=InnoDB AUTO_INCREMENT=90 DEFAULT CHARSET=utf8;
 
--- Volcando datos para la tabla bd_tursi.facturas_cot: ~68 rows (aproximadamente)
+-- Volcando datos para la tabla bd_tursi.facturas_cot: ~82 rows (aproximadamente)
 INSERT INTO `facturas_cot` (`id_version`, `id_presupuesto`, `fecha_version`, `fecha_reserva`, `condiciones`, `monto_factura`, `version`, `validez`, `user`, `confirmado`, `id_cliente`, `pie1`, `pie2`, `pie3`, `obs`, `fecha_modificacion`) VALUES
 	(1, 1, '2022-12-16', NULL, 1, 25000, 1, 4, 1, 0, 12, NULL, NULL, NULL, NULL, NULL),
 	(2, 1, '2022-12-16', NULL, 4, 25000, 2, 4, 1, 0, 12, NULL, NULL, NULL, NULL, NULL),
@@ -714,7 +714,7 @@ CREATE TABLE IF NOT EXISTS `kardex` (
   PRIMARY KEY (`id_kardex`)
 ) ENGINE=InnoDB AUTO_INCREMENT=224 DEFAULT CHARSET=utf8;
 
--- Volcando datos para la tabla bd_tursi.kardex: ~29 rows (aproximadamente)
+-- Volcando datos para la tabla bd_tursi.kardex: ~32 rows (aproximadamente)
 INSERT INTO `kardex` (`id_kardex`, `fecha_kardex`, `cant_entrada`, `producto_kardex`, `costo_entrada`, `total_entrada`, `cant_salida`, `costo_salida`, `total_salida`, `cant_saldo`, `costo_saldo`, `total_saldo`, `added_kardex`, `users_kardex`, `tipo_movimiento`) VALUES
 	(192, '2022-10-18', 2, 34, 10000, 20000, 0, 0, 0, 2, 10000, 20000, '2022-10-18 11:29:08', 1, 5),
 	(193, '2022-10-18', 1, 35, 10000, 10000, 0, 0, 0, 1, 10000, 10000, '2022-10-18 11:31:29', 1, 5),
@@ -759,7 +759,7 @@ CREATE TABLE IF NOT EXISTS `lineas` (
   PRIMARY KEY (`id_linea`)
 ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
 
--- Volcando datos para la tabla bd_tursi.lineas: ~0 rows (aproximadamente)
+-- Volcando datos para la tabla bd_tursi.lineas: ~1 rows (aproximadamente)
 INSERT INTO `lineas` (`id_linea`, `nombre_linea`, `descripcion_linea`, `estado_linea`, `date_added`) VALUES
 	(4, 'CÁMARA', 'CAMARAS', 1, '2022-10-18 11:14:47');
 
@@ -770,7 +770,7 @@ CREATE TABLE IF NOT EXISTS `modulos` (
   PRIMARY KEY (`id_modulo`)
 ) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8;
 
--- Volcando datos para la tabla bd_tursi.modulos: ~11 rows (aproximadamente)
+-- Volcando datos para la tabla bd_tursi.modulos: ~13 rows (aproximadamente)
 INSERT INTO `modulos` (`id_modulo`, `nombre_modulo`) VALUES
 	(1, 'Inicio'),
 	(2, 'Productos'),
@@ -805,7 +805,7 @@ CREATE TABLE IF NOT EXISTS `perfil` (
   PRIMARY KEY (`id_perfil`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 
--- Volcando datos para la tabla bd_tursi.perfil: ~0 rows (aproximadamente)
+-- Volcando datos para la tabla bd_tursi.perfil: ~1 rows (aproximadamente)
 INSERT INTO `perfil` (`id_perfil`, `nombre_empresa`, `giro_empresa`, `fiscal_empresa`, `direccion`, `ciudad`, `codigo_postal`, `estado`, `telefono`, `email`, `impuesto`, `nom_impuesto`, `moneda`, `logo_url`) VALUES
 	(1, 'TURSI', 'SISTEMA DE FACTURACION', '5971557-0', 'AV. SAN BLAS', 'CIUDAD DEL ESTE', '7000', 'ALTO PARANA', '0973 118 404', 'info@softys.com', 10, 'IVA', 'Gs', '../../img/1666140689_logo.png');
 
@@ -866,7 +866,7 @@ CREATE TABLE IF NOT EXISTS `proveedores` (
   PRIMARY KEY (`id_proveedor`)
 ) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8;
 
--- Volcando datos para la tabla bd_tursi.proveedores: ~0 rows (aproximadamente)
+-- Volcando datos para la tabla bd_tursi.proveedores: ~1 rows (aproximadamente)
 INSERT INTO `proveedores` (`id_proveedor`, `nombre_proveedor`, `fiscal_proveedor`, `web_proveedor`, `direccion_proveedor`, `contacto_proveedor`, `email_proveedor`, `telefono_proveedor`, `date_added`, `estado_proveedor`) VALUES
 	(7, 'PROVEEDOR 01', '80081276-0', '', 'ASASKAISUHDS', 'FELIPE', 'asjgbdas@aasds.com', '0973118404', '2022-10-18 11:14:21', 1);
 
@@ -1019,7 +1019,7 @@ CREATE TABLE IF NOT EXISTS `user_group` (
   KEY `user_group_id` (`user_group_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
--- Volcando datos para la tabla bd_tursi.user_group: ~2 rows (aproximadamente)
+-- Volcando datos para la tabla bd_tursi.user_group: ~1 rows (aproximadamente)
 INSERT INTO `user_group` (`user_group_id`, `name`, `permission`, `date_added`) VALUES
 	(1, 'Super Administrador', 'Inicio,1,1,1;Productos,1,1,1;Proveedores,1,1,1;Clientes,1,1,1;Reportes,1,1,1;Configuracion,1,1,1;Usuarios,1,1,1;Permisos,1,1,1;Categorias,1,1,1;Ventas,1,1,1;Compras,1,1,1;Alquiler,1,1,1; Gastos,1,1,1;', '2017-08-09 10:22:15');
 

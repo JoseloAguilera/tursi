@@ -16,3 +16,4 @@ function limpiar($tags)
     $tags = strip_tags($tags);
     return $tags;
 }
+
